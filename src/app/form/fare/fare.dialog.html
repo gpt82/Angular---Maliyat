@@ -1,0 +1,181 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="form-row" formGroupName="fareGroup">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="contractNo">
+          {{ "ContractNo" | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="contractNo"
+          formControlName="contractNo"
+        />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="city">
+          {{ 'CityTitle' | translate }}
+        </label>
+        <ng-select
+          style="font-size: small;"
+          id="city"
+          formControlName="cityId"
+          [items]="cities$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="citiesLoading"
+          [typeahead]="citiesInput$"
+        >
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm"
+          >
+            <div style="margin: 10px 0;">
+              <div class="card-title">{{ item.title }}</div>
+              <div class="card-subtitle mr-2 text-muted">{{ item.alt }}</div>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <!-- <div class="form-group col-md-6 required">
+        <label class="control-label" for="city"
+          >{{ "CityTitle" | translate }}</label
+        >
+        <ng-select
+          style="font-size: small"
+          id="city"
+          formControlName="cityId"
+          [items]="cities$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="citiesLoading"
+          [typeahead]="citiesInput$"
+        >
+        </ng-select>
+        <div class="text-danger" *ngIf="form.get('fareGroup.cityId').touched">
+          <small *ngIf="form.get('fareGroup').hasError('uniqueFare')"
+            >برای این شهر با این شماره قرارداد، کرایه وارد شده است
+          </small>
+        </div>
+      </div> -->
+      <!-- <div class="text-danger">
+        <small *ngIf="!!form.get('fareGroup.cityId').hasError('uniqueFare')">{{'Duplicate_Code' | translate}}</small>
+      </div> -->
+    </div>
+    <div class="form-row" *ngIf="isSuperAdmin">
+      <div class="form-group col-md-6">
+        <label for="branchId">{{'BranchTitle' | translate}}</label>
+        <ng-select
+          style="font-size: small;"
+          name="branch"
+          id="branchId"
+          #branchId
+          [items]="branchs"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="branchId"
+        ></ng-select>
+      </div>
+      <!-- <div class="form-group col-md-6 required">
+        <label class="control-label" for="factoryFare">{{
+                    ("factoryFare" | translate) + (form.get('factoryFare').value | ChakavakCurrency:'ریال':'p')
+                    }}</label>
+        <input class="form-control" id="factoryFare" formControlName="factoryFare" />
+      </div> -->
+    </div>
+    <div class="form-row">
+      <!-- <div class="form-group col-md-6 required">
+        <label class="control-label"
+          for="driverFare">{{('driverFare' | translate) + (form.get('driverFare').value | ChakavakCurrency:'ریال':'p')}}</label>
+        <input class="form-control" id="driverFare"  formControlName="driverFare" />
+      </div> -->
+
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="fare6">
+          {{ ("Fare6" | translate) + (form.get('fare6').value |
+          ChakavakCurrency:'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          id="fare6"
+          formControlName="fare6"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('fare6').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="fare8">
+          {{ ("Fare8" | translate) + (form.get('fare8').value |
+          ChakavakCurrency:'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          id="fare8"
+          formControlName="fare8"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('fare8').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="preFare">
+          {{ "PreFare" | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="preFare"
+          formControlName="preFare"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('preFare').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="form-row"></div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{ "Close" | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid && form.dirty"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isReadOnlyUser ||data.isAccUser)"
+        color="primary"
+      >
+        {{ "Save" | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

@@ -1,0 +1,73 @@
+<mat-toolbar color="primary" class="main-content-toolbar app-actionbar">
+    <div class="grid-alert grid-alert-info" role="alert">
+        <strong>لیست حساب مانده تریلی ها</strong>
+    </div>
+</mat-toolbar>
+
+<div class="table-responsive">
+    <div class="row">
+        <div class="form-group col-md-3">
+            <label class="control-label" for="trailerId">{{
+                "Trailer" | translate
+                }}</label>
+            <ng-select id="trailerId" [items]="trailers$ | async" bindLabel="title" [loading]="trailersLoading"
+                [typeahead]="trailersInput$" [(ngModel)]="trailerId">
+                <ng-template ng-option-tmp let-item="item">
+                    {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{ item.title | slice: 4:6 }} ایران {{
+                    item.title | slice: 11:13 }}
+                </ng-template>
+            </ng-select>
+        </div>
+        <div class="form-group col-md-2">
+            <div><label class="control-label">از تاریخ</label></div>
+            <app-persian-calendar [minYear]="1396" [maxYear]="1401" [date]="fromDate"></app-persian-calendar>
+        </div>
+        <div class="form-group col-md-2">
+            <div><label class="control-label">تا تاریخ</label></div>
+            <app-persian-calendar [minYear]="1396" [maxYear]="1401" [date]="toDate"></app-persian-calendar>
+        </div>
+        <div class="form-group  col-md-2">
+            <label for="branchId">{{'BranchTitle' | translate}}</label>
+            <ng-select [items]="branchs" [multiple]="true" bindLabel="title" [closeOnSelect]="false" bindValue="id"
+                [(ngModel)]="branchIds">
+                <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+                </ng-template>
+            </ng-select>
+        </div>
+        <button mat-raised-button mat-button color="primary" (click)="onSearch()">
+            {{ "FilterByName" | translate }}
+        </button>
+    </div>
+    <kendo-grid [data]="view | async" [resizable]="true" [selectable]="true">
+        <ng-template kendoGridToolbarTemplate>
+            <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();"
+                title=" حذف تمام فیلترها">
+                <span class="material-icons">brush</span>
+            </button>
+            <button type="button" class="btn btn-primary" (click)="onListReport()">
+                {{ "Report" | translate }}
+            </button>
+            <button type="button" class="btn btn-warning" kendoGridExcelCommand>
+                {{ "ExportToExcel" | translate }}
+            </button>
+        </ng-template>
+        <kendo-grid-column width="35px" class="index">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.plaque" title="{{ 'Plaque' | translate }}"></kendo-grid-column>
+        <kendo-grid-column field="entity.driverName" title="{{ 'DriverName' | translate }}"></kendo-grid-column>
+        <kendo-grid-column field="entity.branchs" filterable="false" title="محل بارگیری"></kendo-grid-column>
+        <!-- <kendo-grid-command-column title="{{'Operations' | translate}}">
+      <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+        <button mat-raised-button color="primary" (click)="onEdit(dataItem.entity.trailerId)"
+        [disabled]="dataItem.entity.isConfirm==true && dataItem.entity.isPayed==true">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </ng-template>
+    </kendo-grid-command-column> -->
+        <kendo-grid-excel fileName="TrailerBranch.xlsx"></kendo-grid-excel>
+    </kendo-grid>
+</div>

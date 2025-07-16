@@ -1,0 +1,58 @@
+<p class="card-header bg-primary" style="color: white;">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="form-group required" style="padding-top: 10px;">
+      <label class="control-label" for="name">{{'Name' | translate}}</label>
+      <input
+        type="text"
+        class="form-control"
+        id="name"
+        formControlName="name"
+      />
+      <div
+        class="text-danger"
+        *ngIf="form.get('name').invalid && (form.get('name').dirty || form.get('name').touched)"
+      >
+        <small *ngIf="form.get('name').errors['required']">
+          {{'Name_Is_Required' | translate}}
+        </small>
+        <small *ngIf="form.get('name').errors['uniqueCarGroupName']">
+          {{'Duplicate_Name' | translate}}
+        </small>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="checkbox rtl checkbox-primary">
+          <input id="checkbox0" type="checkbox" formControlName="suv" />
+          <label for="checkbox0">حمل این نوع خودرو دارای مشوق است.</label>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!( authService.isReadOnlyUser|| authService.isAccUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

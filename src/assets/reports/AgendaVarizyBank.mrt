@@ -1,0 +1,529 @@
+{
+  "ReportVersion": "2020.2.1",
+  "ReportGuid": "7d2bcc82e87d91e847af72c0da5d9478",
+  "ReportName": "Report",
+  "ReportAlias": "Report",
+  "ReportFile": "AgendaList.mrt",
+  "ReportCreated": "/Date(925200000+0330)/",
+  "ReportChanged": "/Date(925200000+0330)/",
+  "EngineVersion": "EngineV2",
+  "CalculationMode": "Interpretation",
+  "ReportUnit": "Inches",
+  "PreviewSettings": 268435455,
+  "Styles": {
+    "0": {
+      "Ident": "StiStyle",
+      "Name": "TableRow",
+      "Border": ";;;;;;;solid:0,0,0",
+      "Brush": "solid:231,230,230",
+      "TextBrush": "solid:0,0,0",
+      "NegativeTextBrush": "solid:Red"
+    }
+  },
+  "Dictionary": {
+    "DataSources": {
+      "0": {
+        "Ident": "StiDataTableSource",
+        "Name": "ReportTitle",
+        "Alias": "ReportTitle",
+        "Columns": {
+          "0": {
+            "Name": "BranchName",
+            "Index": -1,
+            "NameInSource": "BranchName",
+            "Alias": "BranchName",
+            "Type": "System.String"
+          },
+          "1": {
+            "Name": "CompanyName",
+            "Index": -1,
+            "NameInSource": "CompanyName",
+            "Alias": "CompanyName",
+            "Type": "System.String"
+          },
+          "2": {
+            "Name": "CarManufacturerName",
+            "Index": -1,
+            "NameInSource": "CarManufacturerName",
+            "Alias": "CarManufacturerName",
+            "Type": "System.String"
+          },
+          "3": {
+            "Name": "CarManufacturerGroupName",
+            "Index": -1,
+            "NameInSource": "CarManufacturerGroupName",
+            "Alias": "CarManufacturerGroupName",
+            "Type": "System.String"
+          },
+          "4": {
+            "Name": "FromDate",
+            "Index": -1,
+            "NameInSource": "FromDate",
+            "Alias": "FromDate",
+            "Type": "System.String"
+          },
+          "5": {
+            "Name": "ToDate",
+            "Index": -1,
+            "NameInSource": "ToDate",
+            "Alias": "ToDate",
+            "Type": "System.String"
+          },
+          "6": {
+            "Name": "Description",
+            "Index": -1,
+            "NameInSource": "Description",
+            "Alias": "Description",
+            "Type": "System.String"
+          },
+          "7": {
+            "Name": "Code",
+            "Index": -1,
+            "NameInSource": "Code",
+            "Alias": "Code",
+            "Type": "System.String"
+          },
+          "8": {
+            "Name": "Name",
+            "Index": -1,
+            "NameInSource": "Name",
+            "Alias": "Name",
+            "Type": "System.String"
+          }
+        },
+        "NameInSource": "ReportTitle"
+      },
+      "1": {
+        "Ident": "StiDataTableSource",
+        "Name": "DetailRows",
+        "Alias": "DetailRows",
+        "Columns": {
+          "0": {
+            "Name": "Fare",
+            "Index": -1,
+            "NameInSource": "Fare",
+            "Alias": "Fare",
+            "Type": "System.Decimal"
+          },
+          "1": {
+            "Name": "AccNumber",
+            "Index": -1,
+            "NameInSource": "AccNumber",
+            "Alias": "AccNumber",
+            "Type": "System.String"
+          },
+          "2": {
+            "Name": "ErjaaId",
+            "Index": -1,
+            "NameInSource": "ErjaaId",
+            "Alias": "ErjaaId",
+            "Type": "System.String"
+          },
+          "3": {
+            "Name": "AccOwner",
+            "Index": -1,
+            "NameInSource": "AccOwner",
+            "Alias": "AccOwner",
+            "Type": "System.String"
+          },
+          "4": {
+            "Name": "Plaque",
+            "Index": -1,
+            "NameInSource": "Plaque",
+            "Alias": "Plaque",
+            "Type": "System.String"
+          }
+        },
+        "NameInSource": "DetailRows"
+      }
+    }
+  },
+  "Pages": {
+    "0": {
+      "Ident": "StiPage",
+      "Name": "Page1",
+      "Guid": "60526186e0304ca4b1a8aa4a928eaf5c",
+      "Interaction": {
+        "Ident": "StiInteraction"
+      },
+      "Border": ";;2;;;;;solid:Black",
+      "Brush": "solid:Transparent",
+      "Components": {
+        "0": {
+          "Ident": "StiColumnHeaderBand",
+          "Name": "ColumnHeaderBand1",
+          "ClientRectangle": "0,0.2,10.22,0.25",
+          "Interaction": {
+            "Ident": "StiInteraction"
+          },
+          "Border": ";;;;;;;solid:Black",
+          "Brush": "solid:Transparent",
+          "Components": {
+            "0": {
+              "Ident": "StiText",
+              "Name": "Text4",
+              "Guid": "43fe05656f0a512e6553c8b135844067",
+              "CanGrow": true,
+              "ClientRectangle": "1.6,0,1.8,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "شماره حساب ملی / شبا مقصد"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            },
+            "1": {
+              "Ident": "StiText",
+              "Name": "Text5",
+              "ShiftMode": "None",
+              "Guid": "0168bf0d9537eb7bdd498ea0ffaad54f",
+              "ClientRectangle": "3.4,0,2.25,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "نام گیرنده"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            },
+            "2": {
+              "Ident": "StiText",
+              "Name": "Text6",
+              "ShiftMode": "None",
+              "Guid": "f829ffdf487feedb285f4cac586ac776",
+              "ClientRectangle": "0.4,0,1.2,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "مبلغ (ریال)"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "TextFormat": {
+                "Ident": "StiNumberFormatService",
+                "NegativePattern": 1,
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "UseLocalSetting": false
+              },
+              "Type": "DataColumn"
+            },
+            "3": {
+              "Ident": "StiText",
+              "Name": "Text7",
+              "Guid": "95d8e291a5fc9e1c946a0317cc031cb2",
+              "CanGrow": true,
+              "ClientRectangle": "0,0,0.4,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "ردیف"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "SystemVariables"
+            },
+            "4": {
+              "Ident": "StiText",
+              "Name": "Text8",
+              "Guid": "d77d3fd947bad007223dfa8bd0fd6eb8",
+              "ClientRectangle": "5.65,0,1.25,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "بابت"
+              },
+              "HorAlignment": "Center",
+              "VertAlignment": "Center",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "Type": "Expression"
+            },
+            "5": {
+              "Ident": "StiText",
+              "Name": "Text9",
+              "Guid": "4bc101f7f2869a349eb23f4d4562b192",
+              "CanGrow": true,
+              "ClientRectangle": "6.9,0,2.3,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "شناسه واریز (اختیاری - حداکثر 35 کاراکتر)"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            },
+            "6": {
+              "Ident": "StiText",
+              "Name": "Text11",
+              "Guid": "52972067a580a74559ad2969b84fe084",
+              "CanGrow": true,
+              "ClientRectangle": "9.2,0,1.02,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "کد ملی (اختیاری)"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            }
+          }
+        },
+        "1": {
+          "Ident": "StiDataBand",
+          "Name": "DataAgent",
+          "ClientRectangle": "0,0.85,10.22,0.25",
+          "Interaction": {
+            "Ident": "StiBandInteraction"
+          },
+          "Border": "All;;;;;;;solid:Black",
+          "Brush": "empty",
+          "Components": {
+            "0": {
+              "Ident": "StiText",
+              "Name": "DataCar_AgentCode",
+              "Guid": "756800a35fab585c225ffe9fc67fe181",
+              "CanGrow": true,
+              "ClientRectangle": "3.4,0,2.25,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{DetailRows.AccOwner}"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            },
+            "1": {
+              "Ident": "StiText",
+              "Name": "DataCar_ExternalNumber",
+              "ShiftMode": "None",
+              "Guid": "faf08524f22620481085e5c3d4142cc7",
+              "ClientRectangle": "1.6,0,1.8,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{DetailRows.AccNumber}"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            },
+            "2": {
+              "Ident": "StiText",
+              "Name": "Text2",
+              "ShiftMode": "None",
+              "Guid": "8fbba47ddd25e0697a5416b0098f3fbb",
+              "ClientRectangle": "0.4,0,1.2,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{DetailRows.Fare}"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "TextFormat": {
+                "Ident": "StiNumberFormatService",
+                "NegativePattern": 1,
+                "DecimalDigits": 0,
+                "GroupSeparator": ",",
+                "UseLocalSetting": false
+              },
+              "Type": "DataColumn"
+            },
+            "3": {
+              "Ident": "StiText",
+              "Name": "Text3",
+              "Guid": "a1732fb8d11015ff5fe345aeeacc7811",
+              "CanGrow": true,
+              "ClientRectangle": "0,0,0.4,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{Line}"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "SystemVariables"
+            },
+            "4": {
+              "Ident": "StiText",
+              "Name": "Text1",
+              "Guid": "182b844c7ec8996dba900ad6145633f6",
+              "ClientRectangle": "5.65,0,1.25,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "تنخواه"
+              },
+              "HorAlignment": "Center",
+              "VertAlignment": "Center",
+              "Border": ";;;;;;;solid:Black",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "Type": "Expression"
+            },
+            "5": {
+              "Ident": "StiText",
+              "Name": "DataCar_Owner",
+              "Guid": "c8ab293730945ca437f296b94b246642",
+              "CanGrow": true,
+              "ClientRectangle": "6.9,0,2.3,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "Text": {
+                "Value": "{DetailRows.ErjaaId}"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            },
+            "6": {
+              "Ident": "StiText",
+              "Name": "Text10",
+              "Guid": "f97345e3d168fd2f174ebacdf4ab786d",
+              "CanGrow": true,
+              "ClientRectangle": "9.2,0,1.02,0.25",
+              "Interaction": {
+                "Ident": "StiInteraction"
+              },
+              "VertAlignment": "Center",
+              "Font": "B Nazanin;9;;",
+              "Border": "Left, Right;;;;;;;solid:0,0,0",
+              "Brush": "solid:Transparent",
+              "TextBrush": "solid:Black",
+              "TextOptions": {
+                "WordWrap": true
+              },
+              "TextQuality": "Wysiwyg",
+              "AllowHtmlTags": true,
+              "Type": "DataColumn"
+            }
+          },
+          "DataSourceName": "DetailRows",
+          "EvenStyle": "TableRow"
+        }
+      },
+      "PaperSize": "Letter",
+      "Orientation": "Landscape",
+      "PageWidth": 11,
+      "PageHeight": 8.5,
+      "Watermark": {
+        "TextBrush": "solid:50,0,0,0"
+      },
+      "Margins": {
+        "Left": 0.39,
+        "Right": 0.39,
+        "Top": 0.39,
+        "Bottom": 0.39
+      }
+    }
+  }
+}

@@ -1,0 +1,113 @@
+<!-- <p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<!-- <button class="close" mat-button (click)="onClose()">X</button> -->
+<!-- {{allIds | json}} -->
+<mat-dialog-content>
+    <kendo-tabstrip justify="end" [destroyOnHide]="false">
+        <kendo-tabstrip-tab title="بارنامه">
+            <ng-template kendoTabContent>
+                <invoice-agenda-component></invoice-agenda-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="امانی">
+            <ng-template kendoTabContent>
+                <invoice-amani-component></invoice-amani-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="عودتی">
+            <ng-template kendoTabContent>
+                <invoice-recar-component></invoice-recar-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="علی الحساب">
+            <ng-template kendoTabContent>
+                <invoice-subsidy-component></invoice-subsidy-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="اجاره کف">
+            <ng-template kendoTabContent>
+                <invoice-kaf-component></invoice-kaf-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="جرایم">
+            <ng-template kendoTabContent>
+                <invoice-penalty-component></invoice-penalty-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="حواله">
+            <ng-template kendoTabContent>
+                <invoice-havale-component></invoice-havale-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="لوازم متفرقه">
+            <ng-template kendoTabContent>
+                <invoice-accessory-component></invoice-accessory-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="فاکتور">
+            <ng-template kendoTabContent>
+                <invoice-factor-component></invoice-factor-component>
+            </ng-template>
+        </kendo-tabstrip-tab>
+    </kendo-tabstrip>
+    <div class="gradientPanel">
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                حواله : {{ invoiceService.sumHavaleAmount | number:'1.0':'en-US'}}
+            </div>
+            <div class="form-group col-md-3">
+                جرایم : {{ invoiceService.sumPenaltyAmount | number:'1.0':'en-US'}}
+            </div>
+            <div class="form-group col-md-3">
+                عودتی : {{ invoiceService.sumRecarFare | number:'1.0':'en-US'}}
+            </div>
+            <div class="form-group col-md-3">
+                بارنامه : {{ invoiceService.sumAgendaFare | number:'1.0':'en-US'}}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                امانی : {{ invoiceService.sumAmaniFare | number:'1.0':'en-US'}}
+            </div>
+            <div class="form-group col-md-3">
+                علی الحساب : {{ invoiceService.sumSubsidyAmount | number:'1.0':'en-US'}}
+            </div>
+            <div class="form-group col-md-3">
+                اجاره کف : {{ invoiceService.sumKafRent | number:'1.0':'en-US'}}
+            </div>
+
+            <div class="form-group col-md-3">
+                فاکتور : {{ invoiceService.sumFactorAmount | number:'1.0':'en-US'}}
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-3">
+                حاصل : {{ invoiceService.total | number:'1.0':'en-US' }}
+            </div>
+            <div class="form-group col-md-3">
+                پرداختنی : {{ invoiceService.sumAgendaFare + invoiceService.sumRecarFare | number:'1.0':'en-US'}}
+            </div>
+            <div class="form-group col-md-3">
+                دریافتنی : {{ invoiceService.sumSubsidyAmount + invoiceService.sumPenaltyAmount + invoiceService.sumKafRent + invoiceService.sumAmaniFare | number:'1.0':'en-US'}}
+            </div>
+
+            <div class="form-group col-md-3">
+                لوازم متفرقه : {{ invoiceService.sumAccessoryAmount | number:'1.0':'en-US'}}
+            </div>
+        </div>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{'Close' | translate}}
+      </button>
+            <button mat-raised-button (click)="onSave()" *ngIf="!authService.isReadOnlyUser" mat-button color="primary">
+        {{'Save' | translate}}
+      </button>
+
+            <!-- <!-- <button mat-raised-button [disabled] = "!data.isEdit" [disabled] = "canPrint" (click)="onSave()" mat-button color="primary">{{'Save' | translate}} </button> -->
+        </div>
+    </div>
+</mat-dialog-actions>
+-->

@@ -1,0 +1,262 @@
+<mat-toolbar color="primary" class="main-content-toolbar app-actionbar">
+    <div class="grid-alert grid-alert-info" role="alert">
+        <strong>لیست صورتحسابها</strong>
+    </div>
+</mat-toolbar>
+
+<div class="table-responsive">
+    <kendo-grid [kendoGridSelectBy]="id" [reorderable]="true" [selectedKeys]="selectedRowIds" #gridCarManufacturerGroups
+        [data]="view | async" [selectable]="true" [pageSize]="state.take" [skip]="state.skip" [sort]="state.sort"
+        [filter]="state.filter" [sortable]="true" [pageable]="{
+      info: true,
+      pageSizes: [10, 20, 30, 40, 50, 100, 200, 500, 10000, 80000],
+      
+      refresh: true
+    }" filterable="menu" (dataStateChange)="dataStateChange($event)">
+        <ng-template kendoGridToolbarTemplate>
+            <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();"
+                title=" حذف تمام فیلترها">
+                <span class="material-icons">brush</span>
+            </button>
+            <kendo-grid-column-chooser autoSync="true" [allowHideAll]="false"></kendo-grid-column-chooser>
+            <button type="button" class="btn btn-primary" (click)="onCreate()">
+                {{ "Create" | translate }}
+            </button>
+            <button type="button" class="btn btn-primary" (click)="onPrint()">
+                چاپ
+            </button>
+            <button type="button" class="btn btn-primary" (click)="onBankPrint()">
+                چاپ بانک
+            </button>
+            <button type="button" class="btn btn-primary" (click)="onTotalPrint()">
+                گزارش کلی
+            </button>
+            <button type="button" class="btn btn-warning" kendoGridExcelCommand>
+                {{ "ExportToExcel" | translate }}
+            </button>
+        </ng-template>
+        <kendo-grid-column width="35px" class="index">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.invoiceNumber" title="{{ 'Code' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.persianRegisteredDate" [sortable]="true"
+            title="{{ 'EntranceDate' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="startswith">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumAgenda" title="بارنامه">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumAgenda) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumAmani" title="امانی">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumAmani) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumRecar" title="عودتی">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumRecar) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumSubsidy" title="علی الحساب">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumSubsidy) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumKaf" title="اجاره کف">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumKaf) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumPenalty" title="جرایم">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumPenalty) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumHavale" title="حواله">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumHavale) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumAccessory" title="لوازم متفرقه">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumAccessory) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumFactor" [hidden]="true" title="فاکتور">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumFactor) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumReplace" [hidden]="true" title="جایگزینی">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumReplace) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.sumSofte" [hidden]="true" title="سفته">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.sumSofte) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.total" title="حاصل">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ intl.formatNumber(dataItem.entity.total) }}
+            </ng-template>
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-gte-operator></kendo-filter-gte-operator>
+                    <kendo-filter-lte-operator></kendo-filter-lte-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="entity.isConfirmed" filter="boolean" width="100px"
+            title="{{ 'IsConfirmed' | translate }}">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <input type="checkbox" [checked]="dataItem.entity.isConfirmed" disabled />
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.description" title="{{ 'Description' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+                    [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column title="{{ 'Operations' | translate }}">
+            <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+                <button mat-raised-button color="primary" class="grid-btn" [disabled]="dataItem.entity.isConfirmed"
+                    (click)="onEdit(dataItem.entity)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-raised-button color="warn" class="grid-btn" delete-directive
+                    [disabled]="authService.isReadOnlyUser || dataItem.entity.isConfirmed"
+                    (onDelete)="onDeleteById(dataItem.entity.id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+
+                <button *ngIf="authService.isSuperAdmin" class="grid-btn" [ngClass]="{
+            'btn btn-secondary': dataItem.entity.isConfirmed,
+            'btn-warning': !dataItem.entity.isConfirmed
+          }" [disabled]="
+          !canEditConfirmed && dataItem.entity.isConfirmed
+  " mat-raised-button (click)="onInvoiceConfirmed()"
+                    title="تایید صورتحساب جهت نهایی شدن و پرداخت.(دیگر صورتحساب قابل ویرایش نخواهد بود)">
+                    <mat-icon>check_circle</mat-icon>
+                </button>
+            </ng-template>
+        </kendo-grid-command-column>
+        <kendo-grid-excel fileName="invoice.xlsx"></kendo-grid-excel>
+    </kendo-grid>
+</div>

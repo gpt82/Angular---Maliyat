@@ -1,0 +1,33 @@
+
+<div class="avatar-container">
+    <mat-progress-spinner class="uploader-progress" *ngFor="let f of uploader.queue"
+                          color="default"
+                          [mode]="'determinate'"
+                          [value]="f.progress"
+                          strokeWidth="4"
+                          diameter="160">
+    </mat-progress-spinner>
+
+    <div class="icon">
+        <button mat-icon-button aria-label="upload image" color="primary" matTooltip="آپلود تصویر پروفایل" (click)="upload()" class="uploader-btn">
+            <mat-icon>attachment</mat-icon>
+
+        </button>
+
+    </div>
+
+
+    <input class="dont-show" style="display: none;"
+           type="file"
+           ng2FileSelect
+           [uploader]="uploader"
+           [accept]="acceptedFileType"
+           (change)="fileChange($event)"
+           [multiple]="false"
+           #fileUpload />
+</div>
+<div *ngIf="showProgress && uploader.progress!=0 && uploader.progress!=100">
+    {{uploader.progress}} %
+</div>
+
+

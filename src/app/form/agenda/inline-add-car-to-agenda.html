@@ -1,0 +1,171 @@
+<!-- <mat-dialog-content *ngIf="agendaId!=null" style="display: inherit;"> -->
+<form #form="ngForm" style="direction: rtl;">
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="bodyNumber">{{'BodyNumber' | translate}}</label>
+      <input
+        class="form-control"
+        name="bodyNumber"
+        id="bodyNumber"
+        #bodyNumber
+        required
+        dir="rtl"
+        [(ngModel)]="addCar.data.Car.bodyNumber"
+        (keydown)="keydown($event)"
+        (blur)="addCar.onBlurNumber()"
+        enLang
+      />
+    </div>
+
+    <div class="form-group col-md-4">
+      <label for="externalNumber">{{'ExternalNumber' | translate}}</label>
+      <input
+        class="form-control"
+        (keydown)="keydown($event)"
+        name="externalNumber"
+        id="externalNumber"
+        #externalNumber
+        dir="rtl"
+        [(ngModel)]="addCar.data.Car.externalNumber"
+      />
+    </div>
+    <div class="form-group col-md-4">
+      <label for="carType">{{'CarTypeTitle' | translate}}</label>
+      <ng-select
+        style="font-size: small;"
+        name="carType"
+        id="carType"
+        #carType
+        [items]="addCar.carTypes"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        (keydown)="addCar.OnNgSelectKeyDown($event,'carType')"
+        required
+        [(ngModel)]="addCar.data.Car.carTypeId"
+        
+      ></ng-select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-6">
+      <label for="agent">نمایندگی تحویل</label>
+      <ng-select
+        style="font-size: small;"
+        name="agent"
+        id="agent"
+        #agent
+        [items]="addCar.agents$ | async"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        (keydown)="addCar.OnNgSelectKeyDown($event,'agents')"
+        required
+        [(ngModel)]="addCar.data.Car.agentId"
+        [loading]="addCar.agentsLoading"
+        [typeahead]="addCar.agentsInput$"
+      ></ng-select>
+    </div>
+    <div class="form-group col-md-6">
+      <label for="deliveryAgent">{{'TargetAgent' | translate}}</label>
+      <ng-select
+        style="font-size: small;"
+        name="deliveryAgent"
+        id="deliveryAgent"
+        #deliveryAgent
+        [items]="addCar.agents$ | async"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        required
+        [(ngModel)]="addCar.data.Car.deliveryAgentId"
+        [loading]="addCar.agentsLoading"
+        [typeahead]="addCar.agentsInput$"
+      ></ng-select>
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-4">
+      <label for="loadingLocation">{{'LoadingLocation' | translate}}</label>
+      <ng-select
+        style="font-size: small;"
+        name="loadingLocation"
+        id="loadingLocation"
+        #loadingLocation
+        [items]="addCar.loadingLocations"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        (keydown)="addCar.OnNgSelectKeyDown($event,'loadingLocation')"
+        required
+        [(ngModel)]="addCar.data.Car.loadingLocationId"
+      ></ng-select>
+    </div>
+    <div class="form-group col-md-4">
+      <!--<div class="date-picker-padding date-picker">-->
+      <label>{{'RegisteredDate' | translate}}</label>
+      <dp-date-picker
+        (keydown)="keydown($event)"
+        class="date-picker-max-width"
+        name="registeredDate"
+        dir="rtl"
+        [(ngModel)]="addCar.data.registeredDate"
+        mode="day"
+        [config]="addCar.data.datePickerConfig"
+        placeholder="{{'DatePickerPlacegolder' | translate}}"
+        theme="dp-material"
+      ></dp-date-picker>
+      <!--</div>-->
+    </div>
+    <div class="form-group col-md-4">
+      <label for="owner">{{'Owner' | translate}}</label>
+      <input
+        class="form-control"
+        name="owner"
+        id="owner"
+        (keydown)="keydown($event)"
+        #owner
+        required
+        dir="rtl"
+        [(ngModel)]="addCar.data.Car.owner"
+      />
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group col-md-12">
+      <label for="fixSentence">{{'FixSentence' | translate}}</label>
+      <ng-select
+        style="font-size: small;"
+        name="fixSentence"
+        id="fixSentence"
+        #fixSentence
+        [items]="addCar.fixSentences"
+        bindLabel="title"
+        bindValue="title"
+        [selectOnTab]="true"
+        appendTo="body"
+        (keydown)="addCar.OnNgSelectKeyDown($event,'descriptionOfSupply')"
+        required
+        [(ngModel)]="addCar.data.Car.descriptionOfSupply"
+      ></ng-select>
+    </div>
+  </div>
+  <div class="form-row" style="direction: ltr; padding: 5px 25px;">
+    <button
+      mat-raised-button
+      (click)="onSave()"
+      [disabled]="!form.valid"
+      mat-button
+      *ngIf="!(authService.isReadOnlyUser)"
+      color="primary"
+    >
+      {{'Add' | translate}}
+    </button>
+  </div>
+</form>
+
+<div class="horizontal-line"></div>

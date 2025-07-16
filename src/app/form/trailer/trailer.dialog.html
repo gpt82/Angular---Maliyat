@@ -1,0 +1,238 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="form-row" style="padding-top: 10px;">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="smartCardNumber">
+          {{ 'SmartCardNumber' | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="smartCardNumber"
+          formControlName="smartCardNumber"
+        />
+        <div
+          class="text-danger"
+          *ngIf="code.invalid && (code.dirty || code.touched)"
+        >
+          <small *ngIf="code.errors?.required">
+            {{ 'Code_Is_Required' | translate }}
+          </small>
+          <small *ngIf="code.errors?.uniqueSmartCardNumber">
+            {{ 'Duplicate_Code' | translate }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="ownerType">{{ 'Ownership' | translate }}</label>
+        <ng-select
+          style="font-size: small;"
+          id="ownerType"
+          formControlName="ownerTypeId"
+          [items]="ownerTypes$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          (keydown)="OnNgSelectKeyDown($event, 'ownerTypes')"
+          [loading]="ownerTypesLoading"
+          [typeahead]="ownerTypesInput$"
+        ></ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="tonnageTypes">
+          {{ 'TonnageTypeTitle' | translate }}
+        </label>
+        <ng-select
+          style="font-size: small;"
+          id="tonnageTypes"
+          formControlName="tonnageTypeId"
+          [items]="tonnageTypes$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          (keydown)="OnNgSelectKeyDown($event, 'tonnageTypes')"
+          [loading]="tonnageTypesLoading"
+          [typeahead]="tonnageTypesInput$"
+        ></ng-select>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label for="trailerBuilderId">
+          {{ 'TrailerBuilderTitle' | translate }}
+        </label>
+        <ng-select
+          style="font-size: small;"
+          id="trailerBuilderId"
+          formControlName="builderId"
+          [items]="trailerBuilders$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          (keydown)="OnNgSelectKeyDown($event, 'trailerBuilders')"
+          [loading]="trailerBuildersLoading"
+          [typeahead]="trailerBuildersInput$"
+        ></ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label class="control-label">تاریخ انقضای بیمه</label>
+        <mat-datepicker #insureExpirDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="insureExpirDatePicker"
+          (click)="popUpCalendar1()"
+          formControlName="insureExpirDate"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label">تاریخ انقضای کارت سلامت</label>
+        <mat-datepicker #healthCardExpirDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="healthCardExpirDatePicker"
+          (click)="popUpCalendar2()"
+          formControlName="healthCardExpirDate"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label">تاریخ انقضای مجوز ایران خودرو</label>
+        <mat-datepicker #companyLicenseExpirDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="companyLicenseExpirDatePicker"
+          (click)="popUpCalendar3()"
+          formControlName="companyLicenseExpirDate"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="tafsiliAccount">
+          {{'TafsiliAccount' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="tafsiliAccount"
+          formControlName="tafsiliAccount"
+        />
+      </div>
+    </div>
+    <!-- <div clas/s="form-row"> -->
+     
+    <!-- </div/> -->
+    <div class="form-row">
+
+      <div class="form-group col-md-12 required">
+        <mat-checkbox
+          color="primary"
+          [disabled]="!authService.isSuperAdmin"
+          formControlName="isBorrowLoan"
+        >
+          <label>ناوگان دارای وام است.</label>
+        </mat-checkbox>
+        <mat-checkbox
+          color="primary"
+          [disabled]="!authService.isSuperAdmin"
+          formControlName="isKafi"
+        >
+          <label>کفی است.</label>
+        </mat-checkbox>
+        <!-- <label class="control-label" for="infringementDescription">توضیح تخلف</label> -->
+        <mat-checkbox
+          color="primary"
+          [disabled]="!authService.isSuperAdmin"
+          formControlName="hasInfringement"
+        >
+          <label>{{ 'HasInfringement' | translate }}</label>
+        </mat-checkbox>
+        <textarea
+          class="form-control"
+          rows="2"
+          id="infringementDescription"
+          formControlName="infringementDescription"
+          [readonly]="authService.isAccUser"
+        ></textarea>
+      </div>
+    </div>
+    <br />
+    <!-- style="text-align: center;" -->
+    <div class="text-danger">
+      <small *ngIf="notifyUniquePlaque">
+        {{'Duplicate_Plaque' | translate}}
+      </small>
+    </div>
+    <div class="Plate" formGroupName="plaque">
+      <input
+        type="text"
+        class="Plate1"
+        maxlength="2"
+        pattern="^[1-9,۱-۹]{2}$"
+        id="plate1"
+        dir="rtl"
+        accept="[0-9]"
+        placeholder="**"
+        formControlName="plate1"
+        [readonly]="data.isEdit && !authService.isSuperAdmin"
+      />
+
+      <select class="Character" id="plateChar" formControlName="plateChar">
+        <option *ngFor="let char of chars" [ngValue]="char">{{ char }}</option>
+      </select>
+      <input
+        type="text"
+        id="plate2"
+        dir="rtl"
+        class="Plate2"
+        pattern="[1-9,۱-۹]{3}"
+        accept="[0-9]"
+        maxlength="3"
+        placeholder="***"
+        formControlName="plate2"
+        [readonly]="data.isEdit && !authService.isSuperAdmin"
+      />
+
+      <input
+        id="plateIr"
+        dir="rtl"
+        type="text"
+        class="Plate-Ir"
+        maxlength="2"
+        pattern="[0-9,۰-۹]{2}"
+        accept="[0-9]"
+        placeholder="**"
+        formControlName="plateIran"
+        [readonly]="data.isEdit && !authService.isSuperAdmin"
+      />
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{ 'Close' | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!authService.isReadOnlyUser"
+        color="primary"
+      >
+        {{ 'Save' | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

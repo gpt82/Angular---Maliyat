@@ -1,0 +1,67 @@
+<p class="card-header bg-primary" style="color: white">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="form-row" formGroupName="fareGroup">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="contractNo">{{
+                    "ContractNo" | translate
+                    }}</label>
+        <input class="form-control" id="contractNo" formControlName="contractNo" />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="province">{{
+                    "ProvinceTitle" | translate
+                    }}</label>
+        <ng-select style="font-size: small" name="province" id="provinceId" #branchId [items]="provinces"
+          bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="provinceId">
+        </ng-select>
+        <div class="text-danger" *ngIf="form.get('fareGroup.provinceId').touched">
+          <small *ngIf="form.get('fareGroup').hasError('uniqueFare')">برای این استان با این شماره قرارداد، کرایه وارد
+            شده
+            است
+          </small>
+        </div>
+      </div>
+      <!-- <div class="text-danger">
+        <small *ngIf="!!form.get('fareGroup.provinceId').hasError('uniqueFare')">{{'Duplicate_Code' | translate}}</small>
+      </div> -->
+    </div>
+    <div class="form-row">
+      <div class="form-group  col-md-6">
+        <label for="carType">{{'BranchTitle' | translate}}</label>
+        <ng-select style="font-size: small" name="branch" id="branchId" #branchId [items]="branchs" bindLabel="title"
+          bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="branchId">
+        </ng-select>
+
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="provinceFare">{{("ProvinceFare" | translate) + (form.get('provinceFare').value | ChakavakCurrency:'ریال':'p')
+                    }}</label>
+        <input class="form-control" id="provinceFare" formControlName="provinceFare" autocomplete="off"/>
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('provinceFare').value / 10 | numberToPersian) +
+            ' تومان ' }}
+          </small>
+        </div>
+      </div>
+    </div>
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{ "Close" | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button mat-raised-button [disabled]="!form.valid && form.dirty" (click)="onSave()" mat-button
+        *ngIf="!data.isAccUser" color="primary">
+        {{ "Save" | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

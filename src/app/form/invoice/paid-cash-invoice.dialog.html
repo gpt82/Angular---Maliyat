@@ -1,0 +1,178 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<!-- <button class="close" mat-button (click)="onClose()">X</button> -->
+<!-- {{allIds | json}} -->
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="form-row">
+      <div class="form-group col-md-2 required">
+        <label class="control-label" for="code">{{ 'Code' | translate }}</label>
+        <input class="form-control" id="code" formControlName="invoiceNumber" />
+        <div class="text-danger" *ngIf="code.invalid && (code.dirty || code.touched)">
+          <small *ngIf="!!code.errors?.uniqueCode">{{ 'Duplicate_Code' | translate }}</small>
+        </div>
+      </div>
+      <div class="form-group col-md-2 required">
+        <label class="control-label">{{ 'Date' | translate }}</label>
+        <mat-datepicker #invoiceDatePicker></mat-datepicker>
+        <input class="form-control" [matDatepicker]="invoiceDatePicker" (click)="popUpCalendar1()"
+          formControlName="registeredDate" />
+      </div>
+
+      <div class="form-group col-md-2 required">
+        <label class="control-label" for="payType">{{'PayTypes' | translate }}</label>
+        <ng-select style="font-size: small" id="payType" [items]="payTypes" bindLabel="title" bindValue="id"
+          [selectOnTab]="true" appendTo="body" formControlName="payTypeId" (change)="onChangePayType($event)">
+        </ng-select>
+      </div>
+      <div class="col-md-1" style="margin-top: 20px; padding: 0px">
+        <button title="چک" mat-raised-button [disabled]="!data.invoice.id" (click)="onEditChaque()">
+          <mat-icon>view_day</mat-icon>
+        </button>
+      </div>
+      <div class="form-group col-md-5">
+        <label for="description">{{ 'Description' | translate }}</label>
+        <input class="form-control" id="description" formControlName="description" />
+      </div>
+      <!-- <button mat-raised-button color="warn" (click)="ClearData()" md-dialog-close> پاک </button> -->
+      <button mat-raised-button color="warn" (click)="onShowSearchDialog()" md-dialog-close>
+        جستجو پیشرفته
+      </button>
+    </div>
+  </form>
+  <kendo-tabstrip justify="end">
+    <kendo-tabstrip-tab title="بارنامه" [selected]="true">
+      <ng-template kendoTabContent>
+        <invoice-agenda-component></invoice-agenda-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="امانی">
+      <ng-template kendoTabContent>
+        <invoice-amani-component></invoice-amani-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="عودتی">
+      <ng-template kendoTabContent>
+        <invoice-recar-component></invoice-recar-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="علی الحساب">
+      <ng-template kendoTabContent>
+        <invoice-subsidy-component></invoice-subsidy-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="اجاره کف">
+      <ng-template kendoTabContent>
+        <invoice-kaf-component></invoice-kaf-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="جرایم">
+      <ng-template kendoTabContent>
+        <invoice-penalty-component></invoice-penalty-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="حواله">
+      <ng-template kendoTabContent>
+        <invoice-havale-component></invoice-havale-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="لوازم متفرقه">
+      <ng-template kendoTabContent>
+        <invoice-accessory-component></invoice-accessory-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="فاکتور">
+      <ng-template kendoTabContent>
+        <invoice-factor-component></invoice-factor-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="جایگزینی">
+      <ng-template kendoTabContent>
+        <invoice-replace-component></invoice-replace-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="هزینه سفته">
+      <ng-template kendoTabContent>
+        <invoice-softe-component></invoice-softe-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+  </kendo-tabstrip>
+  <div class="gradientPanel" style="position: relative;">
+    <button class="refresh-button" (click)="invoiceService.sumAll()">
+      <!-- <mat-icon >refresh</mat-icon> -->
+      <span class="material-icons" style="font-size: 35px;">refresh</span>
+  </button>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        حواله : {{ invoiceService.sumHavaleAmount | number:'1.0':'en-US'}}
+      </div>
+      <div class="form-group col-md-3">
+        جرایم : {{ invoiceService.sumPenaltyAmount | number:'1.0':'en-US'}}
+      </div>
+      <div class="form-group col-md-3">
+        عودتی : {{ invoiceService.sumRecarFare | number:'1.0':'en-US'}}
+      </div>
+      <div class="form-group col-md-3">
+        بارنامه : {{ invoiceService.sumAgendaFare | number:'1.0':'en-US'}}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        امانی : {{ invoiceService.sumAmaniFare | number:'1.0':'en-US'}}
+      </div>
+      <div class="form-group col-md-3">
+        علی الحساب : {{ invoiceService.sumSubsidyAmount | number:'1.0':'en-US'}}
+      </div>
+      <div class="form-group col-md-3">
+        اجاره کف : {{ invoiceService.sumKafRent | number:'1.0':'en-US'}}
+      </div>
+
+      <div class="form-group col-md-3">
+        فاکتور : {{ invoiceService.sumFactorAmount | number:'1.0':'en-US'}}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        حاصل : {{ invoiceService.total | number:'1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        پرداختنی : {{ invoiceService.sumAgendaFare + invoiceService.sumRecarFare
+        | number:'1.0':'en-US'}}
+      </div>
+      <div class="form-group col-md-3">
+        دریافتنی : {{ invoiceService.sumSubsidyAmount +
+        invoiceService.sumPenaltyAmount + invoiceService.sumKafRent +
+        invoiceService.sumAmaniFare | number:'1.0':'en-US'}}
+      </div>
+
+      <div class="form-group col-md-3">
+        لوازم متفرقه : {{ invoiceService.sumAccessoryAmount |
+        number:'1.0':'en-US'}}
+      </div>
+    </div>
+  </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{'Close' | translate}}
+      </button>
+      <button mat-raised-button (click)="onSave()" *ngIf="!authService.isReadOnlyUser" mat-button color="primary">
+      <!-- <button mat-raised-button (click)="onSave()" *ngIf="!authService.isReadOnlyUser" mat-button color="primary"> -->
+        {{'Save' | translate}}
+      </button>
+      <button type="button" *ngIf="data.isEdit" class="btn btn-primary" (click)="onInvoicePrint()">
+        {{ 'ShowOnly' | translate }}
+      </button>
+      <button
+        mat-raised-button
+        mat-button
+        color="warn"
+        (click)="tafsiliReport()"
+      >
+        گزارش تفصیلی
+      </button>
+      <!-- <!-- <button mat-raised-button [disabled] = "!data.isEdit" [disabled] = "canPrint" (click)="onSave()" mat-button color="primary">{{'Save' | translate}} </button> -->
+    </div>
+  </div>
+</mat-dialog-actions>

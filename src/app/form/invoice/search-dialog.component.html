@@ -1,0 +1,159 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="trailerId">
+          {{ 'Trailer' | translate }}
+        </label>
+        <ng-select id="trailerId" [items]="trailers$ | async" bindLabel="title" [loading]="trailersLoading"
+          [typeahead]="trailersInput$" formControlName="trailerId">
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }}
+            {{ item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="trailerId">حداقل تعداد سرویس</label>
+        <table>
+          <tr>
+            <td>
+              <button type="button" mat-raised-button (click)="counter('increment')">+
+              </button>
+            </td>
+            <td>
+              <input style="font-size: large; " matInput name="counter" type="text" size="2" min="1"
+                formControlName="agendaCount" readonly required>
+            </td>
+            <td>
+              <button type="button" mat-raised-button (click)="counter('decrement')"
+                [disabled]="form.get('agendaCount').value < 2">-
+              </button>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label for="branchId">{{ 'BranchTitle' | translate }}</label>
+        <ng-select [items]="branchs" [multiple]="true" bindLabel="title" [closeOnSelect]="false" bindValue="id"
+          formControlName="branchIds">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+              [ngModelOptions]="{standalone: true}" />
+            {{ item.title }}
+          </ng-template>
+        </ng-select>
+        <!-- <ng-select class="col-md-12 no-padding" id="branchId" [items]="branchs" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="branchId">
+            </ng-select> -->
+      </div>
+      <div class="form-group col-md-6">
+        <label for="branchId">{{ 'TonnageTypeTitle' | translate }}</label>
+
+        <!-- //////////////-->
+        <ng-select [items]="tonnageTypes" [multiple]="true" bindLabel="title" [closeOnSelect]="false" bindValue="id"
+          formControlName="tonnageTypeIds">
+          <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+            <input id="item-{{ index }}" type="checkbox" [ngModel]="item$.selected"
+              [ngModelOptions]="{standalone: true}" />
+            {{ item.title }}
+          </ng-template>
+        </ng-select>
+
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label">از تاریخ</label>
+        <mat-datepicker #picker></mat-datepicker>
+        <input class="form-control" [matDatepicker]="picker" (click)="popUpCalendar()" formControlName="fromDate" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label">تا تاریخ</label>
+        <mat-datepicker #picker1></mat-datepicker>
+        <input class="form-control" [matDatepicker]="picker1" (click)="popUpCalendar1()" formControlName="toDate" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label">از سه رقم پلاک</label>
+        <input class="form-control" type="text" maxlength="3" (input)="validateInput($event)" formControlName="fromPlate2" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label">تا سه رقم پلاک </label>
+        <input class="form-control" type="text" maxlength="3" (input)="validateInput($event)" formControlName="toPlate2" />
+      </div>
+    </div>
+    <!-- ///// -->
+    <div class="form-row">
+      <div class="form-group col-md-5">
+        <label style="display: block; padding: 10px;">
+          <input type="radio" value="1" formControlName="agendaType" />
+          <i>همه بارنامه ها</i>
+        </label>
+        <label style="display: block; padding: 10px;">
+          <input type="radio" value="2" formControlName="agendaType" />
+          <i>بارنامه های رسید شده</i>
+        </label>
+        <label style="display: block; padding: 10px;">
+          <input type="radio" value="3" formControlName="agendaType" />
+          <i>
+            بارنامه های رسید
+            <strong>نشده</strong>
+          </i>
+        </label>
+      </div>
+      <!-- <div class="form-group col-md-1" style="border-left: 2px solid gray; height: 120px;"></div> -->
+      <div class="form-group col-md-6" style="border-right: 2px solid gray; ">
+        <label style="display: block; padding: 10px;">
+          <input type="radio" value="1" formControlName="payType" />
+          <i> بارنامه‌های نقدی و غیرنقدی </i>
+        </label>
+        <label style="display: block; padding: 10px;">
+          <input type="radio" value="2" formControlName="payType" />
+          <i> بارنامه‌های نقدی تایید شده</i>
+        </label>
+        <hr>
+        <label style="padding: 10px;">
+          <input type="radio" value="1" formControlName="cleared" />
+          <i> تسویه شده</i>
+        </label>
+        <label style=" padding: 10px;">
+          <input type="radio" value="2" formControlName="cleared" />
+          <i> تسویه نشده</i>
+        </label>
+        <label style=" padding: 10px;">
+          <input type="radio" value="1" formControlName="billed" />
+          <i> صورتحساب شده</i>
+        </label>
+        <label style=" padding: 10px;">
+          <input type="radio" value="2" formControlName="billed" />
+          <i> صورتحساب نشده</i>
+        </label>
+        <!-- <label style="display: block; padding: 10px;">
+          <input type="radio" value="3" formControlName="payType" />
+          <i> بارنامه‌های غیرنقدی </i>
+        </label> -->
+      </div>
+    </div>
+    <!-- ///// -->
+  </form>
+  <!-- {{form.value | json}} -->
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{ 'Close' | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button mat-raised-button [disabled]="!form.valid" (click)="onSave()" mat-button color="primary">
+        {{ 'FilterByName' | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

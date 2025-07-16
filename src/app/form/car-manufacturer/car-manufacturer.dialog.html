@@ -1,0 +1,94 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="form-group required" style="padding-top: 10px">
+      <label class="control-label" for="name">{{'Name' | translate}}</label>
+      <input class="form-control" id="name" formControlName="name" />
+      <div
+        class="text-danger"
+        *ngIf="name.invalid && (name.dirty || name.touched)"
+      >
+        <small *ngIf="name.errors?.required"
+          >{{'Code_Is_Required' | translate}}</small
+        >
+        <small *ngIf="name.errors?.uniqueName"
+          >{{'Duplicate_Name' | translate}}</small
+        >
+      </div>
+    </div>
+    <div class="form-group required">
+      <label class="control-label" for="city"
+        >{{ 'CityTitle' | translate }}</label
+      >
+      <ng-select
+        style="font-size: small"
+        id="city"
+        formControlName="cityId"
+        [items]="cities$ | async"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        [loading]="citiesLoading"
+        [typeahead]="citiesInput$"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-index="index"
+          let-search="searchTerm"
+        >
+          <div style="margin: 10px 0">
+            <div class="card-title">{{ item.title }}</div>
+            <div class="card-subtitle mr-2 text-muted">{{ item.alt }}</div>
+          </div>
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="form-group required">
+      <label class="control-label" for="carManufacturerGroup"
+        >{{'CarManufacturerGroup' | translate}}</label
+      >
+      <ng-select
+        style="font-size: small"
+        name="carManufacturerGroup"
+        id="carManufacturerGroup"
+        formControlName="groupId"
+        [items]="groups$ | async"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        (keydown)="OnNgSelectKeyDown($event,'groups')"
+        [loading]="groupsLoading"
+        [typeahead]="groupsInput$"
+      >
+      </ng-select>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

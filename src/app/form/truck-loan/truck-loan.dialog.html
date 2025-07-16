@@ -1,0 +1,150 @@
+<p class="card-header bg-primary" style="color: white;">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="row">
+      
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="trailerId">
+          {{'Trailer' | translate}}
+        </label>
+        <ng-select
+          style="font-size: small;"
+          formControlName="trailerId"
+          id="trailerId"
+          [items]="trailers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="trailersLoading"
+          [typeahead]="trailersInput$"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            {{item.title | slice:0:3}} {{item.title | slice:3:4}} {{item.title |
+            slice:4:6}} ایران {{item.title | slice:11:13}}
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="borrower">وام گیرنده
+        </label>
+        <input
+        class="form-control"
+        id="borrower"
+        formControlName="borrower"
+      />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label">{{ 'Date' | translate }}</label>
+        <mat-datepicker #loanDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="loanDatePicker"
+          (click)="popUpCalendar1()"
+          formControlName="loanDate"
+        />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="loanAmount">مبلغ وام'{{ (form.get('loanAmount').value |        ChakavakCurrency: 'ریال':'p')}}      </label>
+        <input
+          class="form-control"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="loanAmount"
+          formControlName="loanAmount"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('loanAmount').value / 10 | numberToPersian) + ' تومان '
+            }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="interestRate">نرخ بهره</label>
+        <input
+          class="form-control"
+          OnlyNumber="true"
+          mask="00"
+          id="loanAmount"
+          formControlName="interestRate"
+          autocomplete="off"
+        />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="monthlyPayment">مبلغ قسط
+          {{ (form.get('monthlyPayment').value |
+          ChakavakCurrency: 'ریال':'p')}}
+        </label>
+        <input
+          class="form-control"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="monthlyPayment"
+          formControlName="monthlyPayment"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('monthlyPayment').value / 10 | numberToPersian) + '
+            تومان ' }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="loanTerm">تعداد اقساط
+        </label>
+        <input
+          class="form-control"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="loanTerm"
+          formControlName="loanTerm"
+          autocomplete="off"
+        />
+       
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="control-label" for="description">
+          {{'Description' | translate}}
+        </label>
+        <textarea
+          class="form-control"
+          rows="2"
+          id="description"
+          formControlName="description"
+        ></textarea>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isReadOnlyUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

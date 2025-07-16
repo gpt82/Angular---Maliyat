@@ -1,0 +1,135 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div formGroupName="fareGroup">
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="control-label" for="contractNo">
+            {{ "ContractNo" | translate }}
+          </label>
+          <input
+            class="form-control"
+            id="contractNo"
+            formControlName="contractNo"
+          />
+        </div>
+        <div class="form-group col-md-6">
+          <label for="branchId">شعبه</label>
+          <ng-select
+            style="font-size: small;"
+            name="branchId"
+            id="branchId"
+            #geteZoneId
+            [items]="branchs"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="branchId"
+          ></ng-select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6 required">
+          <label class="control-label" for="geteSenderZonId">
+            زون (منطقه) فرستنده
+          </label>
+          <ng-select
+            style="font-size: small;"
+            name="geteSenderZoneId"
+            id="geteSenderZoneId"
+            #geteSenderZoneId
+            [items]="geteZones"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="geteSenderZoneId"
+          ></ng-select>
+        </div>
+        <div class="form-group col-md-6 required">
+          <label class="control-label" for="geteReceiverZoneId">
+            زون (منطقه) گیرنده
+          </label>
+          <ng-select
+            style="font-size: small;"
+            name="geteReceiverZoneId"
+            id="geteReceiverZoneId"
+            #geteSenderZoneId
+            [items]="geteZones"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="geteReceiverZoneId"
+          ></ng-select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group col-md-6">
+          <label for="tonnageTypeId">نوع بارگیر</label>
+          <ng-select
+            style="font-size: small;"
+            name="tonnageTypeId"
+            id="tonnageTypeId"
+            #tonnageTypeId
+            [items]="tonnageTypes"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="tonnageTypeId"
+          ></ng-select>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="fare">
+          {{ ("Fare" | translate) + (form.get('fare').value |
+          ChakavakCurrency:'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          id="fare"
+          formControlName="fare"
+          autocomplete="off"
+        />
+      </div>
+    </div>
+    <!-- <div class="text-danger"style="text-align:center" *ngIf="form.get('fareGroup.cityId').touched">
+      <small *ngIf="form.get('fareGroup').hasError('uniqueGeteFare')">
+        برای این شهر با این شماره قرارداد، کرایه وارد شده است
+      </small>
+    </div> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{ "Close" | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid && form.dirty"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isReadOnlyUser ||data.isAccUser)"
+        color="primary"
+      >
+        {{ "Save" | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

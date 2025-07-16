@@ -1,0 +1,66 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form [formGroup]="form" style="direction: rtl">
+        <div class="form-row" style="padding-top: 10px">
+            <div class="form-group col-md-12 required">
+                <label class="control-label" for="fromNumber">{{'FromNumber' | translate}}</label
+        >
+        <input
+          class="form-control"
+          id="fromNumber"
+          (blur)="fromToNumberChanged()"
+          OnlyNumber="true"
+          mask="000000"
+          formControlName="fromNumber"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-12 required">
+        <label class="control-label" for="to">{{'ToNumber' | translate}}</label>
+                <input class="form-control" id="to" (blur)="fromToNumberChanged()" OnlyNumber="true" mask="000000" formControlName="toNumber" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12 required">
+                <label class="control-label" for="series">{{'Series' | translate}}</label
+        >
+        <input
+          class="form-control"
+          id="series"
+          dropSpecialCharacters="false"
+          specialCharacters="['/']"
+          mask="00/00"
+          formControlName="series"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label for="totalCount">{{'Total' | translate}}</label>
+                <input class="form-control" id="totalCount" readonly formControlName="totalCount" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="remaining">{{'Remaining' | translate}}</label>
+                <input class="form-control" id="remaining" readonly formControlName="remaining" />
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{'Close' | translate}}
+      </button>
+            <!-- Can optionally provide a result for the closing dialog. -->
+            <button mat-raised-button [disabled]="!form.valid" (click)="onSave()" *ngIf="!authService.isReadOnlyUser" mat-button color="primary">
+        {{'Save' | translate}}
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

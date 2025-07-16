@@ -1,0 +1,98 @@
+<mat-toolbar color="primary" class="main-content-toolbar app-actionbar">
+  <div class="grid-alert grid-alert-info" role="alert">
+    <strong>کارکرد روزانه اعلامی</strong>
+  </div>
+</mat-toolbar>
+
+<div class="table-responsive">
+  <kendo-grid [kendoGridSelectBy]="id" [resizable]="true" [selectedKeys]="selectedRowIds" #gridSentence
+    [data]="view | async" [selectable]="true" [pageSize]="state.take" [skip]="state.skip" [sort]="state.sort"
+    [filter]="state.filter" [sortable]="true" [pageable]="{
+      info: true,
+      pageSizes: [10, 20, 30, 40, 50, 100, 200, 500, 10000, 80000],
+      refresh: true
+    }" filterable="menu" (dataStateChange)="dataStateChange($event)">
+    <ng-template kendoGridToolbarTemplate>
+      <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();"
+        title=" حذف تمام فیلترها">
+        <span class="material-icons">brush</span>
+      </button>
+      <button type="button" class="btn btn-primary" (click)="onCreate()">
+        {{ "Create" | translate }}
+      </button>
+      <button type="button" class="btn btn-warning" kendoGridExcelCommand>
+        {{ 'ExportToExcel' | translate }}
+      </button>
+    </ng-template>
+    <kendo-grid-column width="35px" class="index">
+      <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+        {{ rowIndex + 1 }}
+      </ng-template>
+    </kendo-grid-column>÷
+    <kendo-grid-column field="entity.persianIssueDate" title="تاریخ">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService"
+          operator="startswith">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="entity.branchId" title="{{ 'BranchTitle' | translate }}">
+      <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+        let-filterService="filterService">
+        <multicheck-filter [isPrimitive]="false" [field]="column.field" [currentFilter]="filter"
+          [filterService]="filterService" textField="title" valueField="id" [data]="branches"></multicheck-filter>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.entity.branchName }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="entity.tonnageTypeId" title="بارگیر">
+      <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+        let-filterService="filterService">
+        <multicheck-filter [isPrimitive]="false" [field]="column.field" [currentFilter]="filter"
+          [filterService]="filterService" textField="title" valueField="id" [data]="tonnageTypes"></multicheck-filter>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.entity.tonnageTypeName }}
+      </ng-template>
+    </kendo-grid-column>
+
+    <kendo-grid-column field="entity.tonnageTypeId" title="بارگیر" [hidden]="true">
+      <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter"
+        let-filterService="filterService">
+        <multicheck-filter [isPrimitive]="false" [field]="column.field" [currentFilter]="filter"
+          [filterService]="filterService" textField="title" valueField="id" [data]="tonnageTypes"></multicheck-filter>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.entity.tonnageTypeName }}
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column field="entity.count" title="تعداد" [filterable]="false">
+    </kendo-grid-column>
+
+    <kendo-grid-command-column title="{{ 'Operations' | translate }}">
+      <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+        <button mat-raised-button color="primary" (click)="onEdit(dataItem.entity)">
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button mat-raised-button color="warn" delete-directive (onDelete)="onDeleteById(dataItem.entity.id)"
+          *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </ng-template>
+    </kendo-grid-command-column>
+    <kendo-grid-excel fileName="DailyOperations.xlsx">
+      <kendo-excelexport-column field="entity.persianIssueDate" title="تاریخ">
+      </kendo-excelexport-column>
+      <kendo-excelexport-column field="entity.branchName" title="شعبه">
+      </kendo-excelexport-column>
+      <kendo-excelexport-column field="entity.tonnageTypeName" title="بارگیر">
+      </kendo-excelexport-column>
+      <kendo-excelexport-column field="entity.count" title="تعداد">
+      </kendo-excelexport-column>
+    </kendo-grid-excel>
+  </kendo-grid>
+</div>

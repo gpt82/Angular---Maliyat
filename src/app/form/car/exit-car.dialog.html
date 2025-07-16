@@ -1,0 +1,54 @@
+<p class="card-header bg-primary" style="color: white"> {{data.dialogTitle}}</p>
+<mat-dialog-content>
+
+  <form #form="ngForm" style="direction: rtl">
+
+    <div class="row">
+      <div class="form-group  col-md-6">
+        <label for="receiverFirstName">{{'FirstName' | translate}}</label>
+        <input class="form-control" name="receiverFirstName" id="receiverFirstName" #receiverFirstName
+               required [(ngModel)]="data.receiverFirstName">
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group  col-md-6">
+        <label for="receiverLastName">{{'LastName' | translate}}</label>
+        <input class="form-control" name="receiverLastName" id="receiverLastName" #receiverLastName
+               required [(ngModel)]="data.receiverLastName">
+      </div>
+    </div>
+
+    <div class="date-picker-padding date-picker">
+      <label>{{'ExitDate' | translate}} </label>
+      <dp-date-picker id="exitDate" #exitDate class=" date-picker-max-width"
+                      required name="exitDate" dir="rtl"
+                      [(ngModel)]="data.exitDate" mode="day" [config]="data.datePickerConfig"
+                      placeholder="{{'ExitDate' | translate}}"
+                      theme="dp-material">
+      </dp-date-picker>
+      <mat-error *ngIf="exitDate.hasError('required')">
+        {{'ExitDate_Is_Required' | translate}}
+      </mat-error>
+    </div>
+
+    <div class="row">
+      <div class="form-group  col-md-6">
+        <label for="receiverLastName">{{'LastName' | translate}}</label>
+        <input class="form-control" name="description" id="description" #description dir='rtl' matInput
+             placeholder="{{'Description' | translate}}"
+             [(ngModel)]="data.description">
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button color="warn" (click)="onClose(form)" md-dialog-close>{{'Close' | translate}}</button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button mat-raised-button [disabled]="!form.valid" (click)="onSave(data,form.valid)" mat-button color="primary">
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

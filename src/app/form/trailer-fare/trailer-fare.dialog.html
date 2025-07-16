@@ -1,0 +1,95 @@
+<p class="card-header bg-primary" style="color: white">
+    {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+    <form [formGroup]="form" style="direction: rtl">
+        <div class="form-row" formGroupName="fareGroup">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="contractNo">{{ "ContractNo" | translate }}</label
+        >
+        <input
+          class="form-control"
+          id="contractNo"
+          formControlName="contractNo"
+        />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label>{{'TonnageType' | translate}}</label>
+                <ng-select style="font-size: small" [items]="tonnageTypes" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="tonnageTypeId">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="senderId">{{ 'SenderName' | translate }}</label
+        >
+        <ng-select
+          class="col-md-12 no-padding"
+          id="senderId"
+          [items]="senders"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="senderId"
+        >
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="city"
+          >{{ "CityTitle" | translate }}</label
+        >
+        <ng-select
+          style="font-size: small"
+          id="city"
+          formControlName="cityId"
+          [items]="cities$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="citiesLoading"
+          [typeahead]="citiesInput$"
+        >
+        </ng-select>
+        <div class="text-danger" *ngIf="form.get('fareGroup').touched">
+          <small *ngIf="form.get('fareGroup').hasError('uniqueTrailerFare')"
+            >برای این شهر با این شماره قرارداد، کرایه وارد شده است
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6" *ngIf="isSuperAdmin">
+        <label for="branchId">{{'BranchTitle' | translate}}</label>
+                <ng-select style="font-size: small" name="branch" id="branchId" #branchId [items]="branchs" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="branchId">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="fare">
+          {{ ("Fare" | translate) + (form.get('fare').value |
+          ChakavakCurrency:'ریال':'p') }}
+        </label>
+                <input class="form-control" id="fare" formControlName="fare" autocomplete="off"/>
+                <div class="text-danger">
+                  <small style="font-size: 12px;">
+                    {{(+form.get('fare').value / 10 | numberToPersian) +
+                    ' تومان ' }}
+                  </small>
+                </div>
+            </div>
+        </div>
+        <div class="form-row"></div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{ "Close" | translate }}
+      </button>
+            <!-- Can optionally provide a result for the closing dialog. -->
+            <button mat-raised-button [disabled]="!form.valid && form.dirty" (click)="onSave()" mat-button *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)" color="primary">
+        {{ "Save" | translate }}
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

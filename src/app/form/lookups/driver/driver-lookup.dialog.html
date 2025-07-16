@@ -1,0 +1,48 @@
+<p class="card-header bg-primary" style="color: white"> {{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form class="form-inline" style=" margin-top:10px;direction: rtl">
+        <div class="table-responsive modal-table-responsive">
+            <kendo-grid [kendoGridSelectBy]="id" [selectedKeys]="selectedRowIds" #gridDrivers [data]="view | async" [selectable]="true">
+                <ng-template kendoGridToolbarTemplate>
+                    <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();" title=" حذف تمام فیلترها">
+            <span class="material-icons">brush</span>
+          </button>
+                    <button type="button" class="btn btn-primary" (click)="onCreate()">{{ 'Create' | translate }}</button>
+                    <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>{{'Close' | translate}}</button>
+                    <input type="text" style="height: 30px;  width: 250px;" placeholder="'{{'FilterByName' | translate}}'" name="Search" [(ngModel)]="SearchText" (keypress)="filterBySearchText($event)" />
+                </ng-template>
+                <kendo-grid-column field="entity.smartCardNumber" title="{{'Code' | translate}}">
+                    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.driverFirstName" title="{{'FirstName' | translate}}">
+                    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.driverLastName" title="{{'LastName' | translate}}">
+                    <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+
+                    </ng-template>
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.trailerPlaque" title="{{'Plaque' | translate}}">
+                </kendo-grid-column>
+
+                <kendo-grid-command-column title="{{'Operations' | translate}}">
+                    <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+                        <button mat-raised-button color="primary" (click)="onSelect(dataItem.entity)">
+              <mat-icon>done</mat-icon>
+            </button>
+                    </ng-template>
+                </kendo-grid-command-column>
+            </kendo-grid>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <!-- Can optionally provide a result for the closing dialog. -->
+</mat-dialog-actions>

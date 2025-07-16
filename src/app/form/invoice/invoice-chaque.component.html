@@ -1,0 +1,48 @@
+<p class="card-header bg-primary" style="color: white">لیست چک ها</p>
+<mat-dialog-content style="height: 85% !important; direction: rtl">
+    <div class="form-row">
+        <kendo-grid [data]="view | async" [sortable]="true" [resizable]="true" [selectable]="true">
+            <ng-template kendoGridToolbarTemplate>
+                <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();" title=" حذف تمام فیلترها">
+                    <span class="material-icons">brush</span>
+                </button>
+                <button type="button" class="btn btn-primary" (click)="onCreate()">
+                    {{ "Create" | translate }}
+                </button>
+            </ng-template>
+            <kendo-grid-column width="35px" class="index">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    {{ rowIndex + 1 }}
+                </ng-template>
+            </kendo-grid-column>
+
+            <kendo-grid-column field="chaqueNumber" title="شماره چک">
+            </kendo-grid-column>
+            <kendo-grid-column field="driverName" title="راننده"></kendo-grid-column>
+            <kendo-grid-column field="trailerPlaque" title="{{ 'Plaque' | translate }}">
+            </kendo-grid-column>
+            <kendo-grid-column field="persianIssueDate" title="تاریخ صدور">
+            </kendo-grid-column>
+            <kendo-grid-column field="persianDueDate" title="تاریخ سررسید">
+            </kendo-grid-column>
+            <kendo-grid-column field="amount" title="{{ 'Amount' | translate }}" [filterable]="false">
+            </kendo-grid-column>
+            <kendo-grid-command-column title="{{ 'Operations' | translate }}">
+                <ng-template let-dataItem="dataItem" z kendoGridCellTemplate let-isNew="isNew">
+                    <button mat-raised-button class="grid-btn" color="primary" (click)="onEdit(dataItem.id)">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button mat-raised-button class="grid-btn" color="warn" (click)="onDelete(dataItem.id)">
+                        <mat-icon>delete</mat-icon>
+                    </button>
+                </ng-template>
+            </kendo-grid-command-column>
+        </kendo-grid>
+    </div>
+    <!--   <chaque-component ></chaque-component>-->
+</mat-dialog-content>
+<mat-dialog-actions>
+    <button type="button" class="btn btn-danger" (click)="onClose()">
+        {{ "Close" | translate }}
+    </button>
+</mat-dialog-actions>

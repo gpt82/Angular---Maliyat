@@ -1,0 +1,148 @@
+<p class="card-header bg-primary" style="color: white">لیست بارنامه ها</p>
+<mat-dialog-content style="direction: rtl">
+    <div>
+        <form [formGroup]="form">
+            <div class="form-row">
+                <div class="form-group col-md-2 required">
+                    <label class="control-label" for="code">{{ 'Code' | translate }}</label>
+                    <input class="form-control" id="code" formControlName="cashDepositNumber" />
+                    <div class="text-danger" *ngIf="code.invalid && (code.dirty || code.touched)">
+                        <small *ngIf="!!code.errors?.uniqueCode">{{ 'Duplicate_Code' | translate }}</small>
+                    </div>
+                </div>
+                <div class="form-group col-md-2 required">
+                    <label class="control-label">{{ 'Date' | translate }}</label>
+                    <mat-datepicker #cashDepositDatePicker></mat-datepicker>
+                    <input class="form-control" [matDatepicker]="cashDepositDatePicker" (click)="popUpCalendar1()" formControlName="registeredDate" />
+                </div>
+                <div class="form-group col-md-5">
+                    <label for="description">{{ 'Description' | translate }}</label>
+                    <input class="form-control" id="description" formControlName="description" />
+                </div>
+                <!-- <button color="warn" (click)="onShowSearchDialog()" md-dialog-close> جستجو پیشرفته</button> -->
+            </div>
+        </form>
+    </div>
+    <div>
+        <div class="row" style="padding-right: 25px; padding-top: 10px">
+            <label>{{'WaybillNumber' | translate}}</label>
+            <ng-select class="col-md-3" id="agendaId2Add" #agreeSelect [items]="agendas$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="agendasLoading" [typeahead]="agendasInput$" [(ngModel)]="selectedId">
+            </ng-select>
+            <button mat-raised-button (click)="agreeSelect.focus();add2List()" mat-button color="primary" [disabled]="!(selectedId>0)">
+        {{'Add' | translate}}
+      </button>
+        </div>
+        <kendo-grid [kendoGridBinding]="cashDepositList" kendoGridSelectBy="agendaId" [selectable]="true" filterable="menu" [resizable]="true" [sortable]="true" [groupable]="true">
+            <ng-template kendoGridToolbarTemplate>
+                <button type="button" class="btn btn-warning" kendoGridExcelCommand>
+          {{'ExportToExcel' | translate}}
+        </button>
+            </ng-template>
+            <kendo-grid-column width="25px" class="index">
+                <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                    {{ rowIndex + 1 }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="agendaNumber" width="70px" title="{{ 'WaybillNumber' | translate }}">
+                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                        <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    </kendo-grid-string-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="persianExportDate" width="80px" title="{{ 'ExportDate' | translate }}" [filterable]="false">
+            </kendo-grid-column>
+            <kendo-grid-column field="persianReceivedDate" width="80px" title="{{ 'ReceivedDate' | translate }}" [filterable]="false">
+            </kendo-grid-column>
+            <kendo-grid-column field="agentCode" width="130px" title="{{ 'AgentCode' | translate }}" [filterable]="false">
+            </kendo-grid-column>
+            <kendo-grid-column field="driverFullName" width="120px" title="{{ 'DriverName' | translate }}">
+                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                        <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    </kendo-grid-string-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="trailerPlaque" width="100px" title="{{ 'Plaque' | translate }}">
+                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                        <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    </kendo-grid-string-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="fare" width="100px" title="{{ 'Fare' | translate }}" [filterable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ intl.formatNumber(dataItem.fare) }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="preFare" width="100px" title="{{ 'PreFare' | translate }}" [filterable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ intl.formatNumber(dataItem.preFare) }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="reward" width="100px" title="{{ 'Reward' | translate }}" [filterable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ intl.formatNumber(dataItem.reward) }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="milkRun" width="100px" title="{{ 'MilkRun' | translate }}" [filterable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ intl.formatNumber(dataItem.milkRun) }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="remainingFare" width="100px" title="{{ 'RemainingFare' | translate }}" [filterable]="false">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{ intl.formatNumber(dataItem.remainingFare) }}
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-column field="driverBankAccNumber" width="100px" title="شماره حساب راننده" [filterable]="false">
+            </kendo-grid-column>
+            <kendo-grid-column field="branchTitle" width="120px" title="{{ 'BranchTitle' | translate }}">
+                <ng-template kendoGridCellTemplate let-dataItem>
+                    {{dataItem.branchTitle | slice:5:dataItem.branchTitle.length}}
+                </ng-template>
+                <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                    <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                        <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                        <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                        <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    </kendo-grid-string-filter-menu>
+                </ng-template>
+            </kendo-grid-column>
+            <kendo-grid-command-column title="{{ 'Operations' | translate }}" width="40">
+                <ng-template kendoGridCellTemplate let-dataItem="dataItem">
+                    <button title="حذف" class="grid-btn" mat-raised-button color="warn" (click)="removeHandler(dataItem.agendaId)">
+            <mat-icon>clear</mat-icon>
+          </button>
+                </ng-template>
+            </kendo-grid-command-column>
+            <kendo-grid-excel fileName="cashDeposit.xlsx"></kendo-grid-excel>
+        </kendo-grid>
+    </div>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{ 'Close' | translate }}
+      </button>
+            <button mat-raised-button [disabled]="!form.valid" (click)="onSave()" *ngIf="! authService.isReadOnlyUser" mat-button color="primary">
+        {{ 'Save' | translate }}
+      </button>
+
+            <button type="button" class="btn btn-primary" (click)="onListReport();">
+        چاپ لیست
+      </button>
+
+            <button type="button" class="btn btn-danger" (click)="onClearList();">
+        خالی کردن لیست
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

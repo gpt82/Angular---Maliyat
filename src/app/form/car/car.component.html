@@ -1,0 +1,183 @@
+<mat-toolbar color="primary" class="main-content-toolbar app-actionbar">
+    <div class="grid-alert grid-alert-info" role="alert">
+        <strong>{{ "Cars" | translate }}</strong>
+        <!-- {{ selectedRowIds | json}} -->
+    </div>
+</mat-toolbar>
+
+<div class="table-responsive">
+    <kendo-grid [kendoGridSelectBy]="id" [selectedKeys]="selectedRowIds" #gridSentence [data]="view | async" [selectable]="true" [navigable]="true" [pageSize]="state.take" [skip]="state.skip" [sort]="state.sort" [filter]="state.filter" [sortable]="true" [pageable]="{
+      info: true,
+      pageSizes: [10, 20, 30, 40, 50, 100, 200, 500, 10000, 80000],
+      refresh: true
+    }" [rowClass]="getRowClass" [reorderable]="true" [resizable]="true" (dataStateChange)="dataStateChange($event)" filterable="menu">
+        <ng-template kendoGridToolbarTemplate>
+            <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();" title=" حذف تمام فیلترها">
+                <span class="material-icons">brush</span>
+            </button>
+            <kendo-grid-column-chooser autoSync="true" [allowHideAll]="false"></kendo-grid-column-chooser>
+            <button type="button" class="btn btn-primary" (click)="onCreate()" *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)">
+                {{ "Create" | translate }}
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="!selectedRowIds.length > 0" (click)="onMakeDeposit()" *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)">
+                {{ "MakeDeposit" | translate }}
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="!selectedRowIds.length > 0" (click)="onAgendaDetail()" *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)">
+                صورتجلسه حمل
+            </button>
+            <button type="button" class="btn btn-primary" [disabled]="!selectedRowIds.length > 0" (click)="onExitCar()" *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)">
+                {{ "ExitCar" | translate }}
+            </button>
+            <kendo-dropdownbutton style="background-color: #787878; color: #ffffff" [data]="data4Buttons">
+                گزارشات
+            </kendo-dropdownbutton>
+            <button type="button" class="btn btn-warning" kendoGridExcelCommand>
+                {{ "ExportToExcel" | translate }}
+            </button>
+            <!--<button type="button" class="btn btn-warning" (click)="OnShowFilter()">{{ 'ShowFilter' | translate }}</button>-->
+        </ng-template>
+        <kendo-grid-column width="35px" class="index">
+            <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                {{ rowIndex + 1 }}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.bodyNumber" width="100" title="{{ 'BodyNumber' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.carTypeName" width="100" title="نوع سواری">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.agent.province" width="120" title="{{ 'ProvinceTitle' | translate }}" media="(min-width: 450px)">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.agent.city" width="120" title="{{ 'Township' | translate }}" media="(min-width: 450px)">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="entity.agent.code" width="200" title="{{ 'AgentCode' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="eq">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+            <ng-template kendoGridCellTemplate let-dataItem>
+                ( {{ dataItem.entity.agent.code }}) {{ dataItem.entity.agent.title }}
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column field="entity.persianRegisteredDate" width="100" [sortable]="true" title="{{ 'EntranceDate' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" operator="startswith">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                    <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+
+        <kendo-grid-column
+        field="entity.persianExitDate"
+        width="100px"
+        title="تاریخ بارنامه"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+        <kendo-grid-column [sortable]="true" field="entity.agendaWaybillNumber" width="100" title="{{ 'WaybillNumber' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column [sortable]="true" field="entity.agendaFareContract" width="100" title="قرارداد کرایه">
+            <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+                <kendo-grid-string-filter-menu [column]="column" [filter]="filter" [filterService]="filterService" [extra]="false" operator="contains">
+                    <kendo-filter-eq-operator></kendo-filter-eq-operator>
+                    <kendo-filter-contains-operator></kendo-filter-contains-operator>
+                    <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+                </kendo-grid-string-filter-menu>
+            </ng-template>
+        </kendo-grid-column>
+        <!-- <kendo-grid-column field="entity.loadingLocation.title" width="100" [sortable]="true" title="{{'LoadingLocationTitle' | translate}}">
+      <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+        <kendo-grid-string-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="contains">
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column> -->
+        <kendo-grid-column field="entity.isSent" filter="boolean" width="80px" title="{{ 'CarState' | translate }}" sortable="false">
+            <ng-template kendoGridCellTemplate let-dataItem>
+                <input type="checkbox" [checked]="dataItem.entity.isSent" disabled />
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-column field="entity.branchId" width="120px" title="{{ 'BranchTitle' | translate }}">
+            <ng-template kendoGridFilterMenuTemplate let-column="column" let-filter="filter" let-filterService="filterService">
+                <multicheck-filter [isPrimitive]="false" [field]="column.field" [currentFilter]="filter" [filterService]="filterService" textField="title" valueField="id" [data]="branches">
+                </multicheck-filter>
+            </ng-template>
+            <ng-template kendoGridCellTemplate let-dataItem>
+                {{ dataItem.entity.branchName | slice: 5:dataItem.entity.branchName.length }}
+            </ng-template>
+        </kendo-grid-column>
+        <kendo-grid-command-column title="{{ 'Operations' | translate }}">
+            <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+                <button mat-raised-button color="primary" [hidden]="dataItem.entity.isSent" (click)="onEdit(dataItem.entity.id)">
+                    <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-raised-button color="warn" delete-directive [hidden]="dataItem.entity.isSent" (onDelete)="onDeleteById(dataItem.entity.id)">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </ng-template>
+        </kendo-grid-command-column>
+        <kendo-grid-excel fileName="Cars.xlsx"></kendo-grid-excel>
+    </kendo-grid>
+</div>

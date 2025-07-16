@@ -1,0 +1,99 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form *ngIf="!agendaFetched" #form1="ngForm" style="direction: rtl">
+        <div class="form-row" style="padding-top: 10px">
+            <div class="form-group col-md-6">
+                <div class="form-group ng-required">
+                    <label for="waybillNumber">{{'WaybillNumber' | translate}}</label>
+                    <input class="form-control" name="waybillNumber" id="waybillNumber" #waybillNumber required
+                        [(ngModel)]="WaybillNumber" />
+
+                </div>
+            </div>
+            <div class="form-group col-md-6">
+                <div class="form-group ng-required">
+                    <label for="WaybillSeries">{{'WaybillSeries' | translate}}</label>
+                    <input class="form-control" name="waybillSeries" id="waybillSeries" #waybillSeries
+                        [(ngModel)]="WaybillSeries" />
+                </div>
+            </div>
+        </div>
+    </form>
+    <form *ngIf="agendaFetched" #form2="ngForm" style="direction: rtl">
+        <div class="form-row col-md-12">
+
+            <div class="form-group required col-md-6 no-padding">
+                <label for="branchId">{{'BranchTitle' | translate}}</label>
+                <ng-select [items]="branches" bindLabel="title" bindValue="id" name="branch" [(ngModel)]="branchId">
+                </ng-select>
+            </div>
+            <div class="card form-row col-md-12 rounded">
+                <div class="card-header">{{'AgendaInformations' | translate}}</div>
+                <div class="card-body">
+                    <div class="form-row col-md-12">
+                        <div class="form-group col-md-6">
+                            <label for="number">{{'WaybillNumber' | translate}}</label>
+                            <input class="form-control" name="number" id="number" #number [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.number" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="series">{{'WaybillSeries' | translate}}</label>
+                            <input class="form-control" name="series" matInput id="series" #series [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.series" />
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="exportDate">{{'ExportDate' | translate}}</label>
+                            <input class="form-control" name="exportDate" id="exportDate" [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.persianExportDateTime" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="branch">{{'Branch' | translate}}</label>
+                            <input class="form-control" name="branch" id="branch" #branch dir="rtl" [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.brantTitle" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="agentName">{{'AgentName' | translate}}</label>
+                            <input class="form-control" name="agentName" id="agentName" #agentName [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.targetAgentName" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="agentCity">{{'AgentCity' | translate}}</label>
+                            <input class="form-control" name="agentCity" id="agentCity" #agentCity [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.taragetAgentCity" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="driver">{{'Driver' | translate}}</label>
+                            <input class="form-control" name="driver" id="driver" #driver [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.driver" />
+                        </div>
+                        <div class="form-group col-md-6">
+                            <label for="plaque">{{'Plaque' | translate}}</label>
+                            <input class="form-control" name="plaque" id="plaque" #plaque [readonly]="true"
+                                tabindex="-1" [(ngModel)]="agenda.trailerPlaque" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+                {{'Close' | translate}}
+            </button>
+            <button *ngIf="!agendaFetched" [disabled]="!WaybillNumber" mat-raised-button (click)="onFetchAgenda()"
+                mat-button color="primary">
+                {{'FetchAgenda' |translate}}
+            </button>
+            <button *ngIf="agendaFetched" mat-raised-button (click)="OnSearchAgain()" mat-button color="primary">
+                {{'SearchAgain'| translate}}
+            </button>
+            <button *ngIf="agendaFetched" [disabled]="!branchId" mat-raised-button (click)="onSave()" mat-button color="primary">
+                {{'Save'| translate}}
+            </button>
+        </div>
+    </div>
+</mat-dialog-actions>

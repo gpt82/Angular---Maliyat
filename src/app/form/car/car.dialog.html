@@ -1,0 +1,160 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form #form="ngForm" style="direction: rtl">
+        <div class="row">
+            <div class="form-group col-md-4 required">
+                <label class="control-label" for="bodyNumber">{{'BodyNumber' | translate}}</label
+        >
+        <input
+          class="form-control"
+          name="bodyNumber"
+          id="bodyNumber"
+          #bodyNumber
+          required
+          dir="rtl"
+          [(ngModel)]="addCar.data.Car.bodyNumber"
+          (keydown)="keydown($event)"
+          (blur)="addCar.onBlurNumber()"
+          enLang
+        />
+      </div>
+
+      <div class="form-group col-md-4">
+        <label for="externalNumber">{{'ExternalNumber' | translate}}</label>
+                <input class="form-control" (keydown)="keydown($event)" name="externalNumber" id="externalNumber" #externalNumber dir="rtl" [(ngModel)]="addCar.data.Car.externalNumber" />
+            </div>
+            <div class="form-group col-md-4 required">
+                <label class="control-label" for="carType">{{'CarTypeTitle' | translate}}</label
+        >
+        <ng-select
+          style="font-size: small"
+          name="carType"
+          id="carType"
+          #carType
+          [items]="addCar.carTypes"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          (keydown)="addCar.OnNgSelectKeyDown($event,'carType')"
+          required
+          [(ngModel)]="addCar.data.Car.carTypeId"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="agent"
+          >{{'TargetAgent' | translate}}</label
+        >
+        <ng-select
+          style="font-size: small"
+          name="agent"
+          id="agent"
+          #agent
+          [items]="addCar.agents$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          (keydown)="addCar.OnNgSelectKeyDown($event,'agents')"
+          required
+          [(ngModel)]="addCar.data.Car.agentId"
+          [loading]="addCar.agentsLoading"
+          [typeahead]="addCar.agentsInput$"
+        >
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="deliveryAgent">نمایندگی تحویل</label>
+                <ng-select style="font-size: small" name="deliveryAgent" id="deliveryAgent" #deliveryAgent [items]="addCar.agents$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" (keydown)="addCar.OnNgSelectKeyDown($event,'agents')" required
+                    [(ngModel)]="addCar.data.Car.deliveryAgentId" [loading]="addCar.agentsLoading" [typeahead]="addCar.agentsInput$">
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="loadingLocation">{{'LoadingLocation' | translate}}</label
+        >
+        <ng-select
+          style="font-size: small"
+          name="loadingLocation"
+          id="loadingLocation"
+          #loadingLocation
+          [items]="addCar.loadingLocations"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          (keydown)="addCar.OnNgSelectKeyDown($event,'loadingLocation')"
+          required
+          [(ngModel)]="addCar.data.Car.loadingLocationId"
+        >
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="EntranceFrom">{{'EntranceFrom' | translate}}</label>
+                <ng-select style="font-size: small" name="entranceFrom" id="entranceFrom" #entranceFrom [items]="addCar.entranceFroms" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" (keydown)="addCar.OnNgSelectKeyDown($event,'entranceFrom')" [(ngModel)]="addCar.data.Car.entranceFromId">
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="owner">{{'Owner' | translate}}</label>
+                <input class="form-control" name="owner" id="owner" (keydown)="keydown($event)" #owner required dir="rtl" [(ngModel)]="addCar.data.Car.owner" />
+            </div>
+            <div class="form-group col-md-6">
+                <label>{{'RegisteredDate' | translate}} </label>
+                <dp-date-picker class="date-picker-max-width" name="registeredDate" dir="rtl" [(ngModel)]="addCar.data.registeredDate" mode="day" [config]="addCar.data.datePickerConfig" placeholder="{{'DatePickerPlacegolder' | translate}}" theme="dp-material">
+                </dp-date-picker>
+            </div>
+        </div>
+        <div class="form-group required">
+            <label class="control-label" for="fixSentence">{{'FixSentence' | translate}}</label
+      >
+      <ng-select
+        style="font-size: small"
+        name="fixSentence"
+        id="fixSentence"
+        #fixSentence
+        [items]="addCar.fixSentences"
+        bindLabel="title"
+        bindValue="title"
+        [selectOnTab]="true"
+        appendTo="body"
+        (keydown)="addCar.OnNgSelectKeyDown($event,'descriptionOfSupply')"
+        required
+        [(ngModel)]="addCar.data.Car.descriptionOfSupply"
+      >
+      </ng-select>
+    </div>
+    <br />
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        *ngIf="! authService.isReadOnlyUser"
+        mat-button
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

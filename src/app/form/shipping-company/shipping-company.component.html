@@ -1,0 +1,209 @@
+<!-- <mat-toolbar color="primary" class="main-content-toolbar app-actionbar">
+    <div class="grid-alert grid-alert-info" role="alert">
+        <strong>{{'ShippingCompany' | translate}}</strong>
+    </div>
+</mat-toolbar>
+
+<div class="form-row col-md-8" style="padding: 10px;">
+    <div class="form-group mat-min-height col-md-6">
+
+        <div class="card form-row col-md-12 rounded ">
+            <div class="card-header">
+                <strong> {{'ShippingCompany' | translate}}</strong>
+            </div>
+            <div class="card-body">
+                <div class="form-row col-md-12">
+                  <form #form="ngForm" style="direction: rtl">
+
+                    <div class="row">
+                      <div class="form-group ">
+                        <label for="name" >{{'Name' | translate}}</label>
+                        <input class="form-control" name="name" matInput id="name" #name required  [(ngModel)]="ShippingCompany.name">
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="form-group ">
+                        <label for="economicCode" >{{'EconomicCode' | translate}}</label>
+                        <input class="form-control" name="economicCode" id="economicCode" #economicCode required  [(ngModel)]="ShippingCompany.economicCode">
+                      </div>
+                      </div>
+
+                        <div class="row">
+                          <div class="form-group ">
+                            <label for="manager" >{{'Manager' | translate}}</label>
+                            <input class="form-control" name="manager" id="manager" #manager required  [(ngModel)]="ShippingCompany.manager">
+                          </div>
+                          </div>
+
+                        <mat-form-field class="col-md-11 no-padding">
+                            <input type="text" placeholder="{{'Province' | translate}}" aria-label="Assignee" matInput [formControl]="provinceControl"
+                                [matAutocomplete]="provinceAuto" (blur)="fixAutoRelationalFields('province')" required [(ngModel)]="provinceDto.title">
+                            <mat-autocomplete #provinceAuto="matAutocomplete">
+                                <mat-option *ngFor="let province of provinceFilterOptions | async" [value]="province.entity.name" (onSelectionChange)="onProvinceSelectionChange($event,province.entity)">
+                                    {{ province.entity.name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="provinceControl.hasError('required')">{{'Provicne_Is_Required' | translate}}</mat-error>
+                            <mat-hint>{{provinceControl.value?.sound}}</mat-hint>
+                        </mat-form-field>
+                        <div class="col-md-1 no-padding">
+                            <button class="mat-lokup-button" mat-raised-button color="primary" (click)="onProvinceLookup()" md-dialog-close>
+                                <mat-icon>find_in_page</mat-icon>
+                            </button>
+                        </div>
+
+                        <mat-form-field class="col-md-11 no-padding">
+                            <input type="text" placeholder="{{'CityTitle' | translate}}" aria-label="Assignee" matInput [formControl]="cityControl" [matAutocomplete]="cityAuto"
+                                (blur)="fixAutoRelationalFields('city')" [disabled]="true" required [(ngModel)]="cityDto.title">
+                            <mat-autocomplete #cityAuto="matAutocomplete">
+                                <mat-option *ngFor="let city of cityFilterOptions | async" [value]="city.entity.name" (onSelectionChange)="onCitySelectionChange($event,city.entity)">
+                                    {{ city.entity.name }}
+                                </mat-option>
+                            </mat-autocomplete>
+                            <mat-error *ngIf="cityControl.hasError('required')">{{'City_Is_Required' | translate}}</mat-error>
+                            <mat-hint>{{cityControl.value?.sound}}</mat-hint>
+                        </mat-form-field>
+                        <div class="col-md-1 no-padding">
+                            <button class="mat-lokup-button" [disabled]="!provinceDto.id" mat-raised-button color="primary" (click)="onCityLookup()"
+                                md-dialog-close>
+                                <mat-icon>find_in_page</mat-icon>
+                            </button>
+                        </div>
+                        <mat-form-field>
+                            <input name="address" id="address" #address matInput required dir='rtl' placeholder="{{'Address' | translate}}"
+                                [(ngModel)]="ShippingCompany.address">
+                            <mat-error *ngIf="address.hasError('required')">
+                                {{'ShippingCompanyAddress_Is_Required' | translate}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input name="phone" id="phone" #phone matInput OnlyNumber="true" mask="00000000000" required dir='rtl' placeholder="{{'Phone' | translate}}"
+                                [(ngModel)]="ShippingCompany.phone">
+                            <mat-error *ngIf="phone.hasError('required')">
+                                {{'Phone_Is_Required' | translate}}
+                            </mat-error>
+                        </mat-form-field>
+
+                        <mat-form-field>
+                            <input name="fax" id="fax" #fax OnlyNumber="true" mask="00000000000" matInput required dir='rtl' placeholder="{{'Fax' | translate}}"
+                                [(ngModel)]="ShippingCompany.fax">
+                            <mat-error *ngIf="fax.hasError('required')">
+                                {{'Fax_Is_Required' | translate}}
+                            </mat-error>
+                        </mat-form-field>
+                        <div>
+                                <div>
+                                <input type="file" id="selectFile" (change)="showPreviewLogo($event)" style="display: none;" accept="image/*">
+                                <label class=" font">{{'SelectImage' | translate}}</label>
+                                <button class="mat-lokup-button add-photo" type="button" mat-raised-button color="primary" onclick="document.getElementById('selectFile').click();"
+                                        md-dialog-close>
+                                  <mat-icon>add_a_photo</mat-icon>
+                                </button>
+
+                                <button *ngIf="localUrl" class="mat-lokup-button add-photo" type="button" mat-raised-button color="warn" (click)="onDeleteLogo()"
+                                        md-dialog-close>
+                                  <mat-icon>delete_forever</mat-icon>
+                                </button>
+                              </div>
+                              <div>
+                                <img [src]="localUrl" *ngIf="localUrl" class="imagePlaceHolder" >
+                            </div>
+                        </div>
+
+                        <div >
+                            <button mat-raised-button  (click)="onSubmit(form.valid)" mat-button color="primary">{{'Save'
+                                | translate}}</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+    <div class="form-group mat-min-height col-md-6">
+        <div class="card form-row col-md-12 rounded ">
+            <div class="card-header">
+                <strong> {{'BranchInfo' | translate}}</strong>
+            </div>
+            <div class="card-body">
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong> {{'Code' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong> {{Branch.code}}</strong>
+                    </div>
+                </div>
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'Name' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong>{{Branch.name}}</strong>
+                    </div>
+                </div>
+
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'Manager' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong>{{Branch.manager}}</strong>
+                    </div>
+                </div>
+
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'ManagerPhone' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong>{{Branch.managerPhone}}</strong>
+                    </div>
+                </div>
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'Phone1' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong> {{Branch.phone1}}</strong>
+                    </div>
+                </div>
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'Phone2' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong> {{Branch.phone2}}</strong>
+                    </div>
+                </div>
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'CarManufacturer' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong>{{Branch.manufacturer.title}}</strong>
+                    </div>
+                </div>
+                <div class="form-row col-md-12">
+                    <div class="form-group  col-md-4">
+                        <strong>{{'Address' | translate}}</strong>
+                    </div>
+
+                    <div class="form-group  col-md-8">
+                        <strong>{{Branch.address}}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div> -->

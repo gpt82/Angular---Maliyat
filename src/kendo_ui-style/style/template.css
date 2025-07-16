@@ -1,0 +1,121 @@
+﻿
+body {
+    background-color:#dbdbdb;
+    margin: 0;
+    padding: 0;
+    direction:rtl;
+    text-align:right;
+    font-family:Tahoma;
+    font-size:12px;
+}
+.divcenter
+{
+   width:804px;
+   margin:0 auto;
+   padding:0px;
+}
+.header
+{
+   background:url(/images/summer-title.jpg) no-repeat center center; 
+    width:804px;height:221px;background-color:#f00;
+    
+}
+.header h2
+{
+   padding:100px 600px 0 0;
+   color:#808080;
+    font-family:Tahoma;
+    font-size:110%;
+}
+.divcuntent
+{
+    width:794px;min-height:300px;background-color:#ffffff;padding:5px;
+}
+.footer
+{
+    width:804px;height:50px;background-color:#cccccc
+}
+.k-grid-header .k-header
+{
+    text-align:right !important;
+}
+.copy
+{
+    text-align:center;
+    padding-top: 25px;
+}
+/*---------------------جدول-----------------------------------------------------------------------------------*/
+table.reference
+{
+    background-color: #ffffff;
+    border: 1px solid #c3c3c3;
+    border-collapse: collapse;
+    width: 97%;            
+    margin:10px;
+}
+
+table.reference th
+{
+background-color:#e5eecc;
+border:1px solid #c3c3c3;
+padding:3px;
+vertical-align:top;
+text-align:right;
+}
+
+table.reference td 
+{
+border:1px solid #c3c3c3;
+padding:2px;
+vertical-align:top;
+text-align:right;
+font-size:11px;
+}
+table.reference td p
+{
+    font-size:11px;    
+    margin:0px;
+}
+table.reference td.td
+{
+ direction:ltr;
+ text-align:center;
+ width:40%;
+ vertical-align:middle;
+}
+fieldset div label
+{   
+    min-width: 135px;
+    float: right;
+    clear: left;
+    display: block;    
+    padding-right:5px;
+}
+fieldset div
+{
+    margin:3px;
+}
+
+fieldset div input[type="text"],fieldset div select
+    {
+        border: 1px solid rgb(210, 210, 210);
+        width: 28%;
+        font-size: 13px;
+        color: rgb(51, 51, 51);
+        box-shadow: 0px 1px 5px rgba(0, 0, 0, 0.1) inset;
+        padding: 8px 2%;       
+        margin-right: 1%;
+        font-family:Tahoma;
+    }
+
+fieldset div input[type="submit"]
+    {
+   padding: 0.3em 0.6em;
+box-shadow: 0px 2px 1px rgba(0, 0, 0, 0.3), 0px 1px 0px rgba(255, 255, 255, 0.4) inset;
+background-color: rgb(51, 51, 51);
+color: rgb(255, 255, 255);
+border: 1px solid rgb(0, 0, 0) !important;
+border-radius: 3px 3px 3px 3px;
+text-decoration: none;
+float:left;
+    }

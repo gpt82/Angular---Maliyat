@@ -1,0 +1,54 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="row">
+      <div class="form-group required" style="padding: 10px">
+        <label class="control-label" for="packagingName"
+          >{{'Name' | translate}}</label
+        >
+        <input
+          type="text"
+          class="form-control"
+          id="packagingName"
+          formControlName="packagingName"
+        />
+        <div
+          class="text-danger"
+          *ngIf="form.get('packagingName').invalid && (form.get('packagingName').dirty || form.get('packagingName').touched)"
+        >
+          <small *ngIf="form.get('packagingName').errors['required']"
+            >{{'Name_Is_Required' | translate}}</small
+          >
+          <small *ngIf="form.get('packagingName').errors['uniquePackagingName']"
+            >{{'Duplicate_Name' | translate}}</small
+          >
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

@@ -1,0 +1,107 @@
+<p class="card-header bg-primary" style="color: white;">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="form-row">
+      <div class="form-group required col-md-12 no-padding">
+        <label class="control-label" for="piadNumber">
+          شماره صورت حساب
+        </label>
+        <input class="form-control" formControlName="piadNumber" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group required col-md-12 no-padding">
+        <label class="control-label">تاریخ</label>
+        <mat-datepicker #picker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="picker"
+          (click)="popUpCalendar()"
+          formControlName="payDate"
+        />
+      </div>
+    </div>
+      <hr>
+    <div class="form-row">
+        <label for="branchId">{{'BranchTitle' | translate}}</label>
+        <ng-select
+        class="col-md-12 no-padding"
+          name="branch"
+          id="branchId"
+          #branchId
+          [items]="branches"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="branchId"
+        ></ng-select>
+      </div>
+      <div class="form-row">
+        <div class="form-group required col-md-12 no-padding">
+          <label class="control-label">از تاریخ</label>
+          <mat-datepicker #pickerfrom></mat-datepicker>
+          <input
+            class="form-control"
+            [matDatepicker]="pickerfrom"
+            (click)="popUpCalendarfrom()"
+            formControlName="fromDate"
+          />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group required col-md-12 no-padding">
+          <label class="control-label">تا تاریخ</label>
+          <mat-datepicker #pickerto></mat-datepicker>
+          <input
+            class="form-control"
+            [matDatepicker]="pickerto"
+            (click)="popUpCalendarto()"
+            formControlName="toDate"
+          />
+        </div>
+      </div>
+    
+    <div class="form-row">
+      <!-- <blink class="blinking" *ngIf="data.isNotReceived">
+        بارنامه رسید نشده است
+      </blink> -->
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!(form.dirty || form.valid)"
+        (click)="onSave()"
+        mat-button
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onIgnore()"
+        mat-button
+        *ngIf="data.PiadNumber?.length>0"
+      >
+        پاک کردن
+      </button>
+    </div>
+    <!-- <blink class="blinking" *ngIf="data.isNotReceived">
+      بارنامه رسید نشده است
+    </blink> -->
+  </div>
+</mat-dialog-actions>

@@ -1,0 +1,194 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content dir="rtl" style="display: contents;">
+  <form [formGroup]="form" style="padding-top: 10px; direction: rtl;">
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="driverId">
+          {{ 'Driver' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="driverId"
+          [items]="drivers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="driversLoading"
+          [typeahead]="driversInput$"
+          formControlName="driverId"
+        ></ng-select>
+      </div>
+
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="trailerId">
+          {{ 'Trailer' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="trailerId"
+          [items]="trailers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="trailersLoading"
+          [typeahead]="trailersInput$"
+          formControlName="trailerId"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{
+            item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label">{{ 'Date' | translate }}</label>
+        <mat-datepicker #deliveryDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="deliveryDatePicker"
+          (click)="popUpCalendar1()"
+          formControlName="deliveryDate"
+        />
+      </div>
+      <div class="form-group col-md-6 ">
+        <label class="control-label">تاریخ پایان</label>
+        <mat-datepicker #endDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="endDatePicker"
+          (click)="popUpCalendar2()"
+          formControlName="endDate"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="code">{{ 'Code' | translate }}</label>
+        <input class="form-control" id="code" formControlName="code" />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="rent">
+          {{ 'مبلغ' + (form.get('rent').value | ChakavakCurrency: 'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="rent"
+          formControlName="rent"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('rent').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <!-- <div class="form-group col-md-6 required">
+        <label class="control-label" for="tonnageTypes">
+          {{ 'TonnageTypeTitle' | translate }}
+        </label>
+        <ng-select
+            id="tonnageTypesId"
+            [items]="tonnageTypes"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="tonnageTypeId"
+          ></ng-select>
+      </div> -->
+      <div class="form-group col-md-6 ">
+        <label class="control-label" for="numShipments">تعداد محموله </label>
+        <input
+          class="form-control"
+          id="numShipments"
+          formControlName="numShipments"
+        />
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="guaranteeAmount">
+          {{ ' مبلغ ضمانت' + (form.get('guaranteeAmount').value | ChakavakCurrency: 'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="rent"
+          formControlName="guaranteeAmount"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('guaranteeAmount').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+     
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="guaranteeTypeId">نوع ضمانت</label>
+        <ng-select
+          [items]="guaranteeTypes"
+          [selectOnTab]="true"
+          bindValue="id"
+          labelForId="guaranteeTypeId"
+          formControlName="guaranteeTypeId"
+        >
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="checkbox rtl checkbox-primary">
+        <input
+          id="checkbox0"
+          type="checkbox"
+          formControlName="isActive"
+        />
+        <label for="checkbox0">  فعال       </label>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-12">
+        <label class="control-label" for="description">
+          {{ 'Description' | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="description"
+          formControlName="description"
+        />
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="padding: 1px 0;">
+  <div class="row">
+    <div class="btn-toolbar">
+      <button mat-raised-button color="warn" (click)="onClose()" mat-button>
+        {{ 'Close' | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        style="margin-right: 2px; margin-left: 2px;"
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        *ngIf="!authService.isReadOnlyUser"
+        mat-button
+        color="primary"
+      >
+        {{ 'Save' | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

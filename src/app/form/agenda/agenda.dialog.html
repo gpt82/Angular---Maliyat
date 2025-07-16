@@ -1,0 +1,533 @@
+<div style="overflow-y: scroll; overflow-x: hidden; height: 100%;">
+  <p class="card-header bg-primary" style="color: white;">
+    {{ data.dialogTitle }}
+  </p>
+  <mat-dialog-content dir="rtl" style="display: contents;">
+    <!-- <div style="overflow-y:scroll;" [style.height.px]="[deviceHeight]"> -->
+
+    <form [formGroup]="form" style="padding-top: 10px; direction: rtl;">
+      <div class="form-row">
+        <div class="form-group col-md-2 required">
+          <label class="control-label" for="waybillNumber">
+            {{ 'WaybillNumber' | translate }}
+          </label>
+          <input
+            class="form-control"
+            OnlyNumber="true"
+            mask="0000000"
+            [maxLength]="maxLength"
+            id="waybillNumber"
+            [readonly]="data.isPreFarePaid"
+            formControlName="waybillNumber"
+          />
+        </div>
+        <div class="form-group col-md-2 required">
+          <label class="control-label" for="waybillSeries">
+            {{ 'WaybillSeries' | translate }}
+          </label>
+          <input
+            class="form-control"
+            dropSpecialCharacters="false"
+            specialCharacters="['/']"
+            mask="00/00"
+            id="waybillSeries"
+            [readonly]="data.isPreFarePaid"
+            formControlName="waybillSeries"
+          />
+        </div>
+        <div class="form-group col-md-2">
+          <label class="control-label" for="fareContract">
+            {{ 'FareContract' | translate }}
+          </label>
+          <ng-select
+            formControlName="fareContract"
+            [readonly]="(data.readOnlyAcclvl2)"
+          >
+            <ng-option [value]="'6/14300/3'">6/14300/4</ng-option>        <!--فارس -->
+            <!-- <ng-option [value]="'6/14300/0'">6/14300/0</ng-option> -->
+            <ng-option [value]="'6/14281/3'">6/14281/4</ng-option>        <!--خراسان -->
+            <!-- <ng-option [value]="'6/14281/0'">6/14281/0</ng-option> -->
+            <ng-option [value]="'6/14288/3'">6/14288/4</ng-option>        <!--مازندران -->
+            <!-- <ng-option [value]="'6/14288/0'">6/14288/0</ng-option> -->
+            <!-- <ng-option [value]="'6/14278/0'">6/14278/0</ng-option> -->
+            <ng-option [value]="'6/14278/3'">6/14278/4</ng-option>        <!--تهران -->
+            <ng-option [value]="'6/14292/3'">6/14292/4</ng-option>        <!--تبریز -->
+            <!-- <ng-option [value]="'6/14292/0'">6/14292/0</ng-option> -->
+            <ng-option [value]="'6/14298/3'">6/14298/4</ng-option>        <!--کرمانشاه -->
+            <!-- <ng-option [value]="'6/14298/0'">6/14298/0</ng-option> -->
+            <ng-option [value]="'6/14564/3'">6/14564/3</ng-option>
+            <ng-option [value]="'6/14553/3'">6/14553/3</ng-option>
+            <ng-option [value]="'6/14327/3'">6/14327/3</ng-option>
+            <ng-option [value]="'6/14557/3'">6/14557/3</ng-option>
+            <ng-option [value]="'6/14561/3'">6/14561/3</ng-option>
+            <!-- <ng-option [value]="'6/14278/1'">6/14278/1</ng-option> -->
+            <ng-option [value]="'SamandRail1'">سمندریل فارس</ng-option>
+            <ng-option [value]="'MoyragiFars1'">مویرگی فارس</ng-option>
+          </ng-select>
+          <!-- <input
+            class="form-control"
+            id="FareContract"
+            dropSpecialCharacters="false"
+            formControlName="fareContract"
+          /> -->
+        </div>
+
+        <div class="form-group col-md-2">
+          <label for="cargoCode">{{ 'CargoCode' | translate }}</label>
+          <input
+            class="form-control"
+            id="cargoCode"
+            dropSpecialCharacters="false"
+            formControlName="cargoCode"
+            [readonly]="(data.readOnlyAcclvl2)"/>
+        </div>
+        <div class="form-group col-md-2 required">
+          <label class="control-label">{{ 'ExportDate' | translate }}</label>
+          <mat-datepicker
+            #picker
+            [disabled]="(data.readOnlyAcclvl2)"
+          ></mat-datepicker>
+          <input
+            class="form-control"
+            [matDatepicker]="picker"
+            (click)="popUpCalendar()"
+            formControlName="exportDate"
+            [readonly]="(data.readOnlyAcclvl2)"/>
+        </div>
+        <div class="form-group col-md-2 required">
+          <label class="control-label" for="payType">
+            {{ 'AgendaPayTypes' | translate }}
+          </label>
+          <ng-select
+            style="font-size: small;"
+            id="payType"
+            [items]="payTypes"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="payTypeId"
+            [readonly]="(data.readOnlyAcclvl2)">
+          ></ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group col-md-3 required">
+          <label class="control-label" for="senderId">
+            {{ 'SenderName' | translate }}
+          </label>
+          <ng-select
+            class="col-md-12 no-padding"
+            id="senderId"
+            [items]="senders"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            (keydown)="OnNgSelectKeyDown($event, 'sender')"
+            formControlName="senderId"
+            [readonly]="(data.readOnlyAcclvl2)">
+          ></ng-select>
+        </div>
+        <div class="form-group col-md-3">
+          <label class="control-label" for="loadingLocationId">
+            {{ 'LoadingLocation' | translate }}
+          </label>
+          <ng-select
+            class="col-md-12 no-padding"
+            id="loadingLocationId"
+            [items]="loadingLocations"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            (keydown)="OnNgSelectKeyDown($event, 'loadingLocation')"
+            formControlName="loadingLocationId"            
+            [readonly]="(data.readOnlyAcclvl2)">
+          ></ng-select>
+        </div>
+
+        <div class="form-group col-md-4 required">
+          <label class="control-label" for="agents">
+            {{ 'Receiver' | translate }}
+          </label>
+          <ng-select
+            class="col-md-12 no-padding"
+            name="agents"
+            id="agents"
+            [items]="receivers$ | async"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            (keydown)="OnNgSelectKeyDown($event, 'receiver')"
+            [loading]="receiversLoading"
+            [typeahead]="receiversInput$"
+            formControlName="receiverId"
+            [readonly]="(data.readOnlyAcclvl2)">
+          ></ng-select>
+        </div>
+        <div class="form-group col-md-2">
+          <label for="targetBranchId">شعبه هدف</label>
+          <ng-select
+            id="targetBranchId"
+            [items]="targetBranchs"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="targetBranchId"
+            [readonly]="(data.readOnlyAcclvl2)">
+          ></ng-select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div
+          class="form-group required"
+          [ngClass]="showLttrNo?'col-md-4':'col-md-5'"
+        >
+          <label class="control-label" for="driverId">
+            {{ 'Driver' | translate }}
+          </label>
+          <ng-select
+            class="col-md-12 no-padding"
+            id="driverId"
+            [items]="drivers$ | async"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            (keydown)="OnNgSelectKeyDown($event, 'driver')"
+            [loading]="driversLoading"
+            [typeahead]="driversInput$"
+            formControlName="driverId"
+            [readonly]="(data.readOnlyAcclvl2)">
+          >
+            <ng-template
+              ng-option-tmp
+              let-item="item"
+              let-index="index"
+              let-search="searchTerm"
+            >
+              <div [ngClass]="{'ng-option-wrong':item.alt2 === '1'}">
+                {{item.title}}
+                <div *ngIf="item.alt2 === '1'">
+                  ( دارای تخلف در لیست سیاه قرار دارد)
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+
+        <div
+          class="form-group required"
+          [ngClass]="showLttrNo?'col-md-4':'col-md-5'"
+        >
+          <label class="control-label" for="trailerId">
+            {{ 'Trailer' | translate }}
+          </label>
+          <ng-select
+            class="col-md-12 no-padding"
+            id="trailerId"
+            [items]="trailers$ | async"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            (keydown)="OnNgSelectKeyDown($event, 'trailer')"
+            [loading]="trailersLoading"
+            [typeahead]="trailersInput$"
+            formControlName="trailerId"
+            [readonly]="(data.readOnlyAcclvl2)">
+          >
+            <ng-template ng-option-tmp let-item="item">
+              <div [ngClass]="{'ng-option-wrong':item.alt2 === '1'}">
+                {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{
+                item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+                <div *ngIf="item.alt2 === '1'">
+                  ( دارای تخلف در لیست سیاه قرار دارد)
+                </div>
+              </div>
+            </ng-template>
+          </ng-select>
+        </div>
+        <div class="form-group col-md-2">
+          <!-- *ngIf="data.isBodyTransAgenda" -->
+          <label class="control-label" for="carCount">
+            {{ 'CarCount' | translate }}
+          </label>
+          <input
+            class="form-control"
+            mask="00"
+            id="carCount"
+            formControlName="carCount"
+            (blur)="OnBlurCarCount()"
+            [readonly]="(data.readOnlyAcclvl2)"/>
+          
+        </div>
+        <div class="form-group col-md-2 required" *ngIf="showLttrNo">
+          <!-- *ngIf="data.isBodyTransAgenda" -->
+          <label class="control-label" for="lttrNo">شماره نامه</label>
+          <input class="form-control" id="lttrNo" formControlName="lttrNo"
+          [readonly]="(data.readOnlyAcclvl2)">
+        </div>
+      </div>
+      <div class="form-row" formGroupName="fareGroup">
+        <div class="form-group col-md-3 required">
+          <label class="control-label" for="fare">
+            {{ ('Fare' | translate) }}
+          </label>
+          <input
+            class="form-control"
+            OnlyNumber="true"
+            mask="000000000000"
+            id="fare"
+            formControlName="fare"
+            autocomplete="off"
+            [readonly]="data.isMoved2Acc"
+          />
+
+          <div class="text-danger">
+            <small style="font-size: 12px;">
+              {{(+form.get('fareGroup.fare').value / 10 | numberToPersian) + '
+              تومان ' }}
+            </small>
+          </div>
+          <div class="text-danger" *ngIf="form.get('fareGroup').touched">
+            <small *ngIf="form.get('fareGroup').errors?.checkMaxFare" class="blinking">
+                  کرایه نباید بیشتر از ({{(maxFare / 10 | numberToPersian) + 'تومان '}})باشد
+            </small>
+            
+          </div>
+        </div>
+
+        <div
+          class="form-group"
+          [ngClass]="(authService.isSuperAdmin || authService.isAutoParts)?'col-md-2':'col-md-3'"
+        >
+          <label class="control-label" for="reward">
+            {{ ('Reward' | translate) }}
+          </label>
+          <input
+            class="form-control"
+            id="reward"
+            OnlyNumber="true"
+            mask="000000000000"
+            formControlName="reward"
+            autocomplete="off"
+            [readonly]="data.isMoved2Acc"
+          />
+          <div class="text-danger">
+            <small style="font-size: 12px;">
+              {{(+form.get('fareGroup.reward').value / 10 | numberToPersian) + '
+              تومان ' }}
+            </small>
+          </div>
+          <div class="text-danger" *ngIf="form.get('fareGroup.reward').touched">
+            <small *ngIf="form.get('fareGroup').errors?.checkReward" class="blinking">
+              انعام نباید از {{rewardPercent}} درصد کرایه بیشتر باشد
+              ({{maxReward | ChakavakCurrency: 'ریال':'p'}})
+            </small>
+          </div>
+        </div>
+        <div
+          class="form-group"
+          [ngClass]="(authService.isSuperAdmin ||authService.isAutoParts)?'col-md-2':'col-md-3'"
+        >
+          <label class="control-label" for="preFare">
+            {{'PreFare' | translate}}
+          </label>
+          <input
+            class="form-control"
+            id="preFare"
+            OnlyNumber="true"
+            mask="000000000000"
+            [readonly]="data.isPreFarePaid"
+            formControlName="preFare"
+            autocomplete="off"
+          />
+          <!-- ((authService.isSuperAdmin && !authService.isAccAdmin) || !data.isEdit)" -->
+          <div class="text-danger">
+            <small style="font-size: 12px;">
+              {{(+form.get('fareGroup.preFare').value / 10 | numberToPersian) +
+              ' تومان ' }}
+            </small>
+          </div>
+          <div class="text-danger" *ngIf="form.get('fareGroup').touched">
+            <small *ngIf="form.get('fareGroup').errors?.checkPreFare" class="blinking">پیشکرایه نباید از مجموع انعام وکرایه بیشتر باشد</small>
+            <small *ngIf="form.get('fareGroup').errors?.moreThan40Fare" class="blinking">پیشکرایه نباید از {{preFarePercent}} درصد کرایه وانعام بیشتر باشد({{Fare40Percent | ChakavakCurrency: 'ریال':'p'}})
+            </small>
+          </div>
+        </div>
+        <div  class="form-group col-md-2" >
+        <!-- *ngIf="(authService.isSuperAdmin || authService.isAutoParts)" -->
+          <label class="control-label" for="milkRun">
+            {{ ('MilkRun' | translate) }}
+          </label>
+          <input
+            class="form-control"
+            id="milkRun"
+            OnlyNumber="true"
+            mask="000000000000"
+            formControlName="milkRun"
+            autocomplete="off"
+            [readonly]="data.isMoved2Acc"
+          />
+          <div class="text-danger">
+            <small style="font-size: 12px;">
+              {{(+form.get('fareGroup.milkRun').value / 10 | numberToPersian) +
+              ' تومان ' }}
+            </small>
+          </div>
+        </div>
+        <div class="form-group col-md-1">
+          <label
+            style="font-size: 13px;"
+            class="control-label"
+            for="milkRunCount"
+          >
+            تعداد میلک
+          </label>
+          <input
+            class="form-control"
+            id="milkRuCount"
+            OnlyNumber="true"
+            formControlName="milkRunCount"
+            [readonly]="data.isMoved2Acc"
+          />
+        </div>
+        <div  class="form-group col-md-2" >
+          <!-- *ngIf="(authService.isSuperAdmin || authService.isAutoParts)" -->
+            <label class="control-label" for="milkRun">
+              {{ ('Commision' | translate) }}
+            </label>
+            <input
+              class="form-control"
+              id="commision"
+              OnlyNumber="true"
+              mask="000000000000"
+              formControlName="commision"
+              autocomplete="off"
+              [readonly]="data.isMoved2Acc"
+            />
+          </div>
+
+        <div class="form-group col-md-2">
+          <label for="remainingFare">
+            {{ ('RemainingFare' | translate) }}
+          </label>
+          <input
+            class="form-control"
+            id="remainingFare"
+            [readonly]="true"
+            tabindex="-1"
+            [value]="form.get('remainingFare').value"
+            [readonly]="data.isMoved2Acc"
+          />
+
+          <div class="text-danger">
+            <small style="font-size: 12px;">
+              {{(+form.get('remainingFare').value / 10 | numberToPersian) + '
+              تومان ' }}
+            </small>
+          </div>
+        </div>
+        <div class="text-danger">
+          <blink
+            class="blinking"
+            *ngIf="form.get('fareGroup').errors?.checkTotalFare"
+          >
+            مبلغ کل کرایه بیش از حد مجاز
+          </blink>
+        </div>
+      </div>
+      <div class="form-row">
+        <!-- *ngIf="(authService.isSuperAdmin || authService.isAutoParts)" -->
+        <div class="form-group col-md-10">
+          <label for="description">{{ 'Description' | translate }}</label>
+          <input
+            class="form-control"
+            id="description"
+            formControlName="description"
+            [readonly]="!(canEditDSc || !data.readOnlyAcclvl2)" />
+        </div>
+        <div class="form-group col-md-1">
+          <label for="transTime">{{ 'TransTime' | translate }}</label>
+          <input
+            type="number"
+            class="form-control"
+            id="transTime"
+            placeholder="0-255 ساعت"
+            min="0"
+            max="255"
+            formControlName="transTime"
+            [readonly]="(data.readOnlyAcclvl2)"/>
+        </div>
+        <div class="form-group col-md-1">
+          <label for="distance">مسافت</label>
+          <input
+            type="number"
+            class="form-control"
+            id="distance"
+            min="0"
+            max="2555"
+            formControlName="distance"
+            [readonly]=true/>
+        </div>
+      </div>
+    </form>
+  </mat-dialog-content>
+  <mat-dialog-actions style="padding: 1px 0;">
+    <div class="row">
+      <div class="btn-toolbar">
+        <button mat-raised-button color="warn" (click)="onClose()" mat-button>
+          {{ 'Close' | translate }}
+        </button>
+        <!-- Can optionally provide a result for the closing dialog. -->
+        <button
+          style="margin-right: 2px; margin-left: 2px;"
+          *ngIf="readOnly"
+          mat-raised-button
+          #saveButton
+          [disabled]="!form.valid"
+          (click)=" disabled = true; onSave(); disabled = false;"
+          mat-button
+          color="primary"
+        >
+          {{ 'Save' | translate }}
+        </button>
+
+        <!-- <button *ngIf="!(data.readOnly || data.isAccUser)" mat-raised-button [disabled]="!form.valid" -->
+        <button
+          *ngIf="readOnly"
+          mat-raised-button
+          [disabled]="!form.valid || disabled"
+          (click)="onSave(false)"
+          mat-button
+          color="primary"
+        >
+          {{ 'SaveAndClose' | translate }}
+        </button>
+        <button
+         *ngIf="(canEditDSc && data.readOnlyAcclvl2)"
+          mat-raised-button
+          [disabled]="!form.valid || disabled"
+          (click)="onSave(false)"
+          mat-button
+          color="primary"
+        >
+          {{ 'SaveAndClose' | translate }}
+        </button>
+        <button
+          *ngIf="((authService.isReadOnlyUser || data.isAccUser)) || (data.isEdit && (!this.authService.isSuperAdmin))"
+          mat-raised-button
+          (click)="onShowList()"
+          mat-button
+          color="primary"
+        >
+          لیست صورتجلسه
+        </button>
+      </div>
+    </div>
+  </mat-dialog-actions>
+</div>

@@ -1,0 +1,28 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form #form="ngForm" class="form-inline" style="direction: rtl">
+        <mat-form-field class="col-md-12 no-padding">
+            <input type="text" placeholder="{{'Users' | translate}}" aria-label="Assignee" matInput [formControl]="userControl" [matAutocomplete]="userAuto" (blur)="fixAutoRelationalFields('user')" required [(ngModel)]="userDto.userName" />
+            <mat-autocomplete #userAuto="matAutocomplete">
+                <mat-option *ngFor="let user of userFilterOptions | async" [value]="user.userName" (onSelectionChange)="onUserSelectionChange($event,user)">
+                    {{ user.userName }}
+                </mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="userControl.hasError('required')">{{'User_Is_Required' | translate}}</mat-error>
+            <mat-hint>{{userControl.value?.sound}}</mat-hint>
+        </mat-form-field>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{'Close' | translate}}
+      </button>
+            <!-- Can optionally provide a result for the closing dialog. -->
+            <button mat-raised-button [disabled]="!form.valid" (click)="onSave()" *ngIf="!authService.isReadOnlyUser" mat-button color="primary">
+        {{'Save' | translate}}
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

@@ -1,0 +1,75 @@
+﻿import { MessageService } from '@progress/kendo-angular-l10n';
+import { Injectable } from '@angular/core';
+
+const messages = {
+  'kendo.grid.pagerItems': 'مورد',
+  'kendo.grid.pagerOf': 'از',
+  'kendo.slider.increment': 'افزایش',
+  'kendo.slider.decrement': 'کاهش',
+  'kendo.slider.dragHandle': 'کشیدن با ماوس',
+  'kendo.switch.off': 'خاموش(غیرفعال)',
+  'kendo.numerictextbox.increment': 'افزودن',
+  'kendo.numerictextbox.decrement': 'کاهنده',
+  'kendo.calendar.today': 'امروز',
+  'kendo.dateinput.increment': 'افزایش',
+  'kendo.dateinput.decrement': 'کاهش',
+  'kendo.datepicker.today': 'امروز',
+  'kendo.datepicker.toggle': 'تقویم را تغییر دهید',
+  'kendo.timepicker.acceptLabel': 'تنظیم ساعت',
+  'kendo.timepicker.cancel': 'انصراف',
+  'kendo.timepicker.cancelLabel': ' لغو تغییرات',
+  'kendo.timepicker.now': 'الان',
+  'kendo.timepicker.nowLabel': ' اکنون انتخاب کنید',
+  'kendo.timepicker.toggle': 'فهرست زمان را تغییر دهید',
+  'kendo.timeselector.accept': ' تنظیم',
+  'kendo.timeselector.acceptLabel': 'تنظیم ساعت',
+  'kendo.timeselector.cancel': ' انصراف',
+  'kendo.timeselector.cancelLabel': 'لغو تغییرات ',
+  'kendo.timeselector.now': 'الان',
+  'kendo.timeselector.nowLabel': ' انتخاب زمان کنونی',
+  'kendo.grid.groupPanelEmpty':
+    ' برای گروه بندی ستونی را با ماوس به اینجا بکشید و رها کنید ',
+  'kendo.grid.noRecords': ' محتوایی برای نمایش وجود ندارد. ',
+  'kendo.grid.pagerFirstPage': ' برو به اولین صفحه ',
+  'kendo.grid.pagerPreviousPage': ' برو به صفحه قبل ',
+  'kendo.grid.pagerNextPage': ' برو به صفحه بعد ',
+  'kendo.grid.pagerLastPage': ' برو به آخرین صفحه ',
+  'kendo.grid.pagerPage': ' صفحه ',
+  'kendo.grid.pagerItemsPerPage': ' تعداد در صفحه ',
+  'kendo.grid.filter': ' فیلتر ',
+  'kendo.grid.filterEqOperator': ' برابر باشد با ',
+  'kendo.grid.filterNotEqOperator': ' نابرابر باشد با ',
+  'kendo.grid.filterIsNullOperator': ' تهی باشد ',
+  'kendo.grid.filterIsNotNullOperator': ' تهی نباشد ',
+  'kendo.grid.filterIsEmptyOperator': 'خالی باشد',
+  'kendo.grid.filterIsNotEmptyOperator': 'خالی نباشد',
+  'kendo.grid.filterStartsWithOperator': ' شروع شود با ',
+  'kendo.grid.filterContainsOperator': ' شامل شود ',
+  'kendo.grid.filterNotContainsOperator': 'شامل نشود',
+  'kendo.grid.filterEndsWithOperator': ' خاتمه یابد با ',
+  'kendo.grid.filterGteOperator': ' بزرگتر یا مساوی ',
+  'kendo.grid.filterGtOperator': ' بزرگتر از ',
+  'kendo.grid.filterLteOperator': ' کوچکتر یا مساوی ',
+  'kendo.grid.filterLtOperator': ' کوچکتر از ',
+  'kendo.grid.filterIsTrue': ' بله ',
+  'kendo.grid.filterIsFalse': ' خیر ',
+  'kendo.grid.filterBooleanAll': ' (همه) ',
+  'kendo.grid.filterAfterOrEqualOperator': ' از یا بعد از ',
+  'kendo.grid.filterAfterOperator': ' بعداز ',
+  'kendo.grid.filterBeforeOperator': ' قبل از ',
+  'kendo.grid.filterBeforeOrEqualOperator': ' از یا قبل از ',
+  'kendo.grid.filterFilterButton': ' فیلتر ',
+  'kendo.grid.filterClearButton': ' حذف فیلتر ',
+  'kendo.grid.filterAndLogic': ' و ',
+  'kendo.grid.filterOrLogic': ' یا ',
+  'kendo.grid.columnsApply': ' اعمال کردن ',
+  'kendo.grid.columnsReset': ' حالت اولیه ',
+  'kendo.grid.columns': 'ستونها'
+};
+
+@Injectable()
+export class KendoMessageService extends MessageService {
+  public get(key: string): string {
+    return messages[key];
+  }
+}

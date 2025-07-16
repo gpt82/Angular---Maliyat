@@ -1,0 +1,39 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form class="form-inline" style="margin-top: 10px; direction: rtl">
+        <div class="table-responsive modal-table-responsive">
+            <kendo-grid [kendoGridSelectBy]="id" [resizable]="true" [selectedKeys]="selectedRowIds" #gridBanks [data]="view | async" [selectable]="true" [pageSize]="state.take" [skip]="state.skip" [sort]="state.sort" [filter]="state.filter" [sortable]="true" [pageable]="{info: true,pageSizes:[10,20,30,40,50,100,200,500],refresh:true}"
+                [filterable]="false" (dataStateChange)="dataStateChange($event)">
+                <ng-template kendoGridToolbarTemplate>
+                    <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();" title=" حذف تمام فیلترها">
+                        <span class="material-icons">brush</span>
+                    </button>
+                    <button type="button" class="btn btn-primary" (click)="onCreate()">
+                        {{ 'Create' | translate }}
+                    </button>
+                    <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+                        {{'Close' | translate}}
+                    </button>
+                </ng-template>
+                <kendo-grid-column field="entity.code" title="{{'Code' | translate}}">
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.name" title="{{'Name' | translate}}">
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.address" title="{{'Address' | translate}}">
+                </kendo-grid-column>
+                <kendo-grid-command-column title="{{'Operations' | translate}}">
+                    <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+                        <button mat-raised-button color="primary" (click)="onSelect(dataItem.entity)">
+                            <mat-icon>done</mat-icon>
+                        </button>
+                    </ng-template>
+                </kendo-grid-command-column>
+            </kendo-grid>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <!-- Can optionally provide a result for the closing dialog. -->
+</mat-dialog-actions>

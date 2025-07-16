@@ -1,0 +1,97 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+    <form [formGroup]="form" style="direction: rtl">
+        <label>{{'WaybillNumber' | translate}}</label>
+        <div class="form-row">
+            <div class="col-12 col-md-9 mb-2 mb-md-0">
+                <ng-select class="col-md-12" id="agendaId" #agreeSelect [items]="agendas$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="agendasLoading" [typeahead]="agendasInput$" formControlName="agendaId">
+                    <ng-template ng-option-tmp let-item="item">
+                        {{item.title}} <br />
+                        <small>{{item.alt}}</small>
+                    </ng-template>
+                </ng-select>
+            </div>
+            <div class="col-12 col-md-3">
+                <button mat-raised-button (click)="onShowAgenda()" mat-button color="primary" title="نمایش بارنامه">
+          ...
+        </button>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="alternateAgendaNo">بارنامه جایگزین
+        </label>
+                <input class="form-control" id="alternateAgendaNo" formControlName="alternateAgendaNo" />
+            </div>
+            <div class="form-group col-md-6 required">
+                <label class="control-label">{{ 'Date' | translate }}</label>
+                <mat-datepicker #issueDatePicker></mat-datepicker>
+                <input class="form-control" [matDatepicker]="issueDatePicker" (click)="popUpCalendar1()" formControlName="issueDate" />
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6">
+                <label class="control-label" for="driverId">راننده جایگزین</label>
+                <ng-select formControlName="driverId" id="driverId" [items]="drivers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="driversLoading" [typeahead]="driversInput$">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="trailerId">تریلی جایگزین</label>
+                <ng-select formControlName="trailerId" id="trailerId" [items]="trailers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="trailersLoading" [typeahead]="trailersInput$">
+                    <ng-template ng-option-tmp let-item="item">
+                        {{item.title | slice:0:3}} {{item.title | slice:3:4}} {{item.title | slice:4:6}} ایران {{item.title | slice:11:13}}
+                    </ng-template>
+                </ng-select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="amount">
+          {{('Fare' | translate) + (form.get('amount').value |
+          ChakavakCurrency: 'ریال':'p')}}
+        </label>
+                <input class="form-control" OnlyNumber="true" mask="000000000000" id="amount" formControlName="amount" autocomplete="off"  />
+                <div class="text-danger">
+                    <small style="font-size: 12px;">
+                      {{(+form.get('amount').value / 10 | numberToPersian) +
+                      ' تومان ' }}
+                    </small>
+                  </div>
+            </div>
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="preFare">
+          {{('PreFare' | translate) + (form.get('preFare').value |
+          ChakavakCurrency: 'ریال':'p')}}
+        </label>
+                <input class="form-control" OnlyNumber="true" mask="000000000000" id="preFare" formControlName="preFare" autocomplete="off"  />
+                <div class="text-danger">
+                    <small style="font-size: 12px;">
+                      {{(+form.get('preFare').value / 10 | numberToPersian) +
+                      ' تومان ' }}
+                    </small>
+                  </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="form-group col-md-12">
+                <label class="control-label" for="description">{{'Description' | translate}}</label>
+                <textarea class="form-control" rows="2" id="description" formControlName="description">
+      </textarea>
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{'Close' | translate}}
+      </button>
+            <!-- Can optionally provide a result for the closing dialog. -->
+            <button mat-raised-button [disabled]="!form.valid" (click)="onSave()" mat-button *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)" color="primary">
+        {{'Save' | translate}}
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

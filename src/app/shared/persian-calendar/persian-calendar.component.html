@@ -1,0 +1,20 @@
+<numeric-select
+  [min]="1"
+  [max]="31"
+  [value]="date.day"
+  (valueChanged)="date.day=$event"
+  ></numeric-select>
+/
+<numeric-select
+  [min]="1"
+  [max]="12"
+  [value]="date.month"
+  (valueChanged)="date.month=$event"
+  ></numeric-select>
+/
+<numeric-select
+  [min]="minYear"
+  [max]="maxYear"
+  [value]="date.year"
+  (valueChanged)="date.year=$event"
+  ></numeric-select>

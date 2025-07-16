@@ -1,0 +1,316 @@
+<p class="card-header bg-primary" style="color: white;">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="row">
+      <div class="col-md-8">
+        <div class="row" style="padding-top: 10px;" formGroupName="fullName">
+          <div class="form-group col-md-6 required">
+            <label class="control-label" for="firstName">
+              {{'First_Name' | translate}}
+            </label>
+            <input
+              class="form-control"
+              id="firstName"
+              formControlName="firstName"
+              [readonly]="authService.isAccUser"
+            />
+            <div
+              class="text-danger"
+              *ngIf=" (fullName.dirty || fullName.touched)"
+            >
+              <small *ngIf="notifyUniqueFullName">
+                {{'Duplicate_FullName' | translate}}
+              </small>
+            </div>
+          </div>
+          <div class="form-group col-md-6 required">
+            <label class="control-label" for="lastName">
+              {{'Last_Name' | translate}}
+            </label>
+            <input
+              class="form-control"
+              id="lastName"
+              formControlName="lastName"
+              [readonly]="authService.isAccUser"
+            />
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6 required">
+            <label class="control-label" for="nationCardNumber">
+              کدملی راننده
+            </label>
+            <input
+              class="form-control"
+              id="nationCardNumber"
+              formControlName="nationCardNumber"
+            />
+            <!-- <div class="text-danger" *ngIf="smartCode.invalid && (smartCode.dirty || smartCode.touched)">
+              <small *ngIf="smartCode.errors?.required">{{'Code_Is_Required' | translate}}</small>
+              <small *ngIf="smartCode.errors?.uniqueSmartCode">{{'Duplicate_Code' | translate}}</small>
+            </div> -->
+          </div>
+          <div class="form-group col-md-6">
+            <mat-checkbox color="primary" formControlName="isOwner">
+              <label>مالک تریلی است.</label>
+            </mat-checkbox>
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6 required">
+            <label class="control-label" for="smartCardNumber">
+              {{'SmartCardNumber' | translate}}
+            </label>
+            <input
+              class="form-control"
+              id="smartCardNumber"
+              formControlName="smartCardNumber"
+              [readonly]="authService.isAccUser"
+            />
+            <div
+              class="text-danger"
+              *ngIf="smartCode.invalid && (smartCode.dirty || smartCode.touched)"
+            >
+              <small *ngIf="smartCode.errors?.required">
+                {{'Code_Is_Required' | translate}}
+              </small>
+              <small *ngIf="smartCode.errors?.uniqueSmartCode">
+                {{'Duplicate_Code' | translate}}
+              </small>
+            </div>
+          </div>
+          <div class="form-group col-md-6 required">
+            <label class="control-label" for="licenseNumber">
+              {{'LicenseNumber' | translate}}
+            </label>
+            <input
+              class="form-control"
+              id="licenseNumber"
+              formControlName="licenseNumber"
+              [readonly]="authService.isAccUser"
+            />
+            <div
+              class="text-danger"
+              *ngIf="licence.invalid && (licence.dirty || licence.touched)"
+            >
+              <small *ngIf="licence.errors?.required">
+                {{'Code_Is_Required' | translate}}
+              </small>
+              <small *ngIf="licence.errors?.uniqueLicenseNumber">
+                {{'Duplicate_Code' | translate}}
+              </small>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4" style="padding-top: 10px;">
+        <div class="container1">
+          <img
+            [src]="localUrl"
+            alt="انتخاب عکس راننده"
+            class="imagePlaceHolder image"
+            style="width: 100%;"
+          />
+          <div class="middle">
+            <input
+              type="file"
+              id="selectFile"
+              (change)="showPreviewImage($event)"
+              style="display: none;"
+              accept="image/*"
+            />
+            <button
+              class="mat-lokup-button add-photo"
+              type="button"
+              mat-raised-button
+              color="primary"
+              onclick="document.getElementById('selectFile').click();"
+              md-dialog-close
+            >
+              <mat-icon>add_a_photo</mat-icon>
+            </button>
+
+            <button
+              *ngIf="localUrl"
+              class="mat-lokup-button add-photo"
+              type="button"
+              mat-raised-button
+              color="warn"
+              (click)="onDeleteDriverImage()"
+              md-dialog-close
+            >
+              <mat-icon>delete_forever</mat-icon>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-row">
+        <div class="form-group col-md-3">
+          <label for="accNumber">{{'AccNumber' | translate}}</label>
+          <input
+            class="form-control"
+            id="accNumber"
+            formControlName="accNumber"
+            [readonly]="!((authService.isSuperAdmin || authService.isAccUser) || !data.isEdit )"
+          />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="AccOwner">نام صاحب حساب</label>
+          <input
+            class="form-control"
+            id="accOwner"
+            formControlName="accOwner"
+            [readonly]="!((authService.isSuperAdmin || authService.isAccUser) || !data.isEdit )"
+          />
+        </div>
+        <div class="form-group col-md-3">
+          <label for="bankName">{{'BankName' | translate}}</label>
+          <ng-select
+            style="font-size: small;"
+            name="bankName"
+            id="bankName"
+            #bankName
+            [items]="bankNames"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            formControlName="accBankId"
+          ></ng-select>
+        </div>
+        <div class="form-group col-md-3 required" >
+          <label class="control-label" for="trailerId">
+            {{'Trailer' | translate}}
+          </label>
+          <ng-select
+            style="font-size: small;"
+            formControlName="trailerId"
+            id="trailerId"
+            [items]="trailers$ | async"
+            bindLabel="title"
+            bindValue="id"
+            [selectOnTab]="true"
+            appendTo="body"
+            (keydown)="OnNgSelectKeyDown($event,'trailers')"
+            [loading]="trailersLoading"
+            [typeahead]="trailersInput$"
+          >
+            <ng-template ng-option-tmp let-item="item">
+              {{item.title | slice:0:3}} {{item.title | slice:3:4}} {{item.title
+              | slice:4:6}} ایران {{item.title | slice:11:13}}
+            </ng-template>
+          </ng-select>
+        </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="personAddress">شهر</label>
+        <!-- <textarea class="form-control" rows="3" id="personAddress" formControlName="address"
+          [readonly]="authService.isAccUser">
+        </textarea> -->
+        <ng-select
+          style="font-size: small;"
+          id="city"
+          formControlName="cityId"
+          [items]="cities$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="citiesLoading"
+          [typeahead]="citiesInput$"
+        >
+          <ng-template
+            ng-option-tmp
+            let-item="item"
+            let-index="index"
+            let-search="searchTerm"
+          >
+            <div style="margin: 10px 0;">
+              <div class="card-title">{{ item.title }}</div>
+              <div class="card-subtitle mr-2 text-muted">{{ item.alt }}</div>
+            </div>
+          </ng-template>
+        </ng-select>
+      </div>
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="street">خیابان اصلی</label>
+        <input class="form-control" id="street" formControlName="street" />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label" for="byStreet">خیابان فرعی</label>
+        <input class="form-control" id="byStreet" formControlName="byStreet" />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label" for="alley">کوچه</label>
+        <input class="form-control" id="alley" formControlName="alley" />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label" for="no">پلاک</label>
+        <input class="form-control" id="no" formControlName="no" />
+      </div>
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="postalCode">کد پستی</label>
+        <input
+          class="form-control"
+          id="postalCode"
+          formControlName="postalCode"
+        />
+      </div>
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="mobile">موبایل</label>
+        <input class="form-control" id="mobile" formControlName="mobile" />
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label" for="phone">تلفن</label>
+        <input class="form-control" id="phone" formControlName="phone" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-12 required">
+        <!-- <label class="control-label" for="infringementDescription">توضیح تخلف</label> -->
+        <mat-checkbox
+          color="primary"
+          [disabled]="!authService.isSuperAdmin"
+          formControlName="hasInfringement"
+        >
+          <label>{{ 'HasInfringement' | translate }}</label>
+        </mat-checkbox>
+        <textarea
+          class="form-control"
+          rows="2"
+          id="infringementDescription"
+          formControlName="infringementDescription"
+          [readonly]="authService.isAccUser"
+        ></textarea>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        *ngIf="! authService.isReadOnlyUser"
+        mat-button
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

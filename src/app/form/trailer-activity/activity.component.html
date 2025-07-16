@@ -1,0 +1,283 @@
+<mat-toolbar color="primary" class="main-content-toolbar app-actionbar">
+  <div class="grid-alert grid-alert-info" role="alert">
+    <strong>تعداد بارگیری تریلر در شعب</strong>
+  </div>
+</mat-toolbar>
+
+<div class="table-responsive" style="padding-top: 10px; direction: rtl;">
+  <div class="row">
+    <div class="form-group col-md-2" style="padding-right: 30px;">
+      <label class="control-label" for="trailerId"> بارنامه تسویه شده/ نشده</label>
+      <div>
+        <ng-select [(ngModel)]="selectedType">
+          <ng-option *ngFor="let type of types" [value]="type.id">
+            {{ type.name }}
+          </ng-option>
+        </ng-select>
+      </div>
+      <div><label class="control-label">رسید شده/ نشده </label></div>
+      <div>
+        <ng-select [(ngModel)]="isReceived">
+          <ng-option *ngFor="let type of receiveTypes" [value]="type.id">
+            {{ type.name }}
+          </ng-option>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-group col-md-2">
+      <label class="control-label" for="trailerId">
+        {{ 'Trailer' | translate }}
+      </label>
+      <ng-select
+        id="trailerId"
+        [items]="trailers$ | async"
+        bindLabel="title"
+        [loading]="trailersLoading"
+        [typeahead]="trailersInput$"
+        [(ngModel)]="trailerId"
+      >
+        <ng-template ng-option-tmp let-item="item">
+          {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }}
+          {{ item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+        </ng-template>
+      </ng-select>
+      <label class="control-label" for="trailerId">حداقل تعداد سرویس</label>
+      <table  >
+        <tr>
+          <td>
+            <button type="button" mat-raised-button (click)="counter('increment')">+
+          </button>
+          </td>
+          <td >
+            <input style="font-size: large; " matInput name="counter" type="text" size="2" min="1" [(ngModel)]="agendaCount" readonly required>
+         </td>
+          <td>
+            <button type="button" mat-raised-button (click)="counter('decrement')" [disabled]="agendaCount < 2">-
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="form-group col-md-2">
+      <div style="display: inline-block;">
+        <div><label class="control-label">از تاریخ</label></div>
+        <app-persian-calendar
+          [minYear]="1396"
+          [maxYear]="1405"
+          [date]="fromDate"
+        ></app-persian-calendar>
+      </div>
+      <div >
+        <div><label class="control-label">تا تاریخ</label></div>
+        <app-persian-calendar
+          [minYear]="1396"
+          [maxYear]="1405"
+          [date]="toDate"
+        ></app-persian-calendar>
+      </div>
+    </div>
+    <!-- <div class="form-group col-md-1 ">
+            <div> <label class="control-label">نوع بارگیر</label></div>
+ <ng-select [items]="branchs" [multiple]="true" bindLabel="title" [closeOnSelect]="false" bindValue="id" [(ngModel)]="branchIds">
+                <ng-template ng-option-tmp let-item="item" let-item$="item$" let-index="index">
+                    <input id="item-{{index}}" type="checkbox" [ngModel]="item$.selected" /> {{item.title}}
+                </ng-template>
+            </ng-select>
+        </div> -->
+    <div class="form-group col-md-2">
+      <label for="branchId">{{ 'BranchTitle' | translate }}</label>
+
+      <!-- //////////////-->
+      <ng-select
+        [items]="branchs"
+        [multiple]="true"
+        bindLabel="title"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [(ngModel)]="branchIds"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-index="index"
+        >
+          <input
+            id="item-{{ index }}"
+            type="checkbox"
+            [ngModel]="item$.selected"
+          />
+          {{ item.title }}
+        </ng-template>
+      </ng-select>
+    </div>
+    <div class="form-group col-md-2">
+      <label for="branchId">{{ 'TonnageTypeTitle' | translate }}</label>
+
+      <!-- //////////////-->
+      <ng-select
+        [items]="tonnageTypes"
+        [multiple]="true"
+        bindLabel="title"
+        [closeOnSelect]="false"
+        bindValue="id"
+        [(ngModel)]="tonnageTypeId"
+      >
+        <ng-template
+          ng-option-tmp
+          let-item="item"
+          let-item$="item$"
+          let-index="index"
+        >
+          <input
+            id="item-{{ index }}"
+            type="checkbox"
+            [ngModel]="item$.selected"
+          />
+          {{ item.title }}
+        </ng-template>
+      </ng-select>
+      
+    </div>
+    <div class="form-group col-md-2" style="padding-top: 22px;">
+      <button
+        mat-raised-button
+        mat-button
+        color="primary"
+        (click)="trailerItems()"
+      >
+        {{ 'FilterByName' | translate }}
+      </button>
+      <button
+        mat-raised-button
+        mat-button
+        color="accent"
+        (click)="PrintActivity()"
+      >
+        چاپ
+      </button>
+      <button
+        mat-raised-button
+        mat-button
+        color="warn"
+        (click)="tafsiliReport()"
+      >
+        گزارش تفصیلی
+      </button>
+    </div>
+  </div>
+  <kendo-tabstrip justify="end">
+    <kendo-tabstrip-tab title="بارنامه" [selected]="true">
+      <ng-template kendoTabContent>
+        <invoice-agenda-component *ngIf="loadData"></invoice-agenda-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="امانی">
+      <ng-template kendoTabContent>
+        <invoice-amani-component></invoice-amani-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="عودتی">
+      <ng-template kendoTabContent>
+        <invoice-recar-component></invoice-recar-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="علی الحساب">
+      <ng-template kendoTabContent>
+        <invoice-subsidy-component></invoice-subsidy-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="اجاره کف">
+      <ng-template kendoTabContent>
+        <invoice-kaf-component></invoice-kaf-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="جرایم">
+      <ng-template kendoTabContent>
+        <invoice-penalty-component></invoice-penalty-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="حواله">
+      <ng-template kendoTabContent>
+        <invoice-havale-component></invoice-havale-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="لوازم متفرقه">
+      <ng-template kendoTabContent>
+        <invoice-accessory-component></invoice-accessory-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="فاکتور">
+      <ng-template kendoTabContent>
+        <invoice-factor-component></invoice-factor-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+    <kendo-tabstrip-tab title="جایگزینی">
+      <ng-template kendoTabContent>
+        <invoice-replace-component></invoice-replace-component>
+      </ng-template>
+    </kendo-tabstrip-tab>
+  </kendo-tabstrip>
+  <div class="gradientPanel">
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        حواله : {{ invoiceService.sumHavaleAmount | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        جرایم : {{ invoiceService.sumPenaltyAmount | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        عودتی : {{ invoiceService.sumRecarFare | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        بارنامه : {{ invoiceService.sumAgendaFare | number: '1.0':'en-US' }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        امانی : {{ invoiceService.sumAmaniFare | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        علی الحساب :
+        {{ invoiceService.sumSubsidyAmount | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        اجاره کف : {{ invoiceService.sumKafRent | number: '1.0':'en-US' }}
+      </div>
+
+      <div class="form-group col-md-3">
+        فاکتور : {{ invoiceService.sumFactorAmount | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        جایگزینی : {{ invoiceService.sumReplaceAmount | number: '1.0':'en-US' }}
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3">
+        حاصل : {{ invoiceService.total | number: '1.0':'en-US' }}
+      </div>
+      <div class="form-group col-md-3">
+        پرداختنی :
+        {{
+          invoiceService.sumAgendaFare + invoiceService.sumRecarFare
+            | number: '1.0':'en-US'
+        }}
+      </div>
+      <div class="form-group col-md-3">
+        دریافتنی :
+        {{
+          invoiceService.sumSubsidyAmount +
+            invoiceService.sumPenaltyAmount +
+            invoiceService.sumKafRent +
+            invoiceService.sumAmaniFare | number: '1.0':'en-US'
+        }}
+      </div>
+
+      <div class="form-group col-md-3">
+        لوازم متفرقه :
+        {{ invoiceService.sumAccessoryAmount | number: '1.0':'en-US' }}
+      </div>
+    </div>
+  </div>
+  <!-- </div> -->
+</div>

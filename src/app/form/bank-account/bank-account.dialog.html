@@ -1,0 +1,114 @@
+<p class="card-header bg-primary" style="color: white;">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="form-row" style="padding-top: 10px;">
+      <div class="form-group col-md-6">
+        <label for="trailerId">{{'Plaque' | translate}}</label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="trailerId"
+          [items]="trailers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="trailersLoading"
+          [typeahead]="trailersInput$"
+          formControlName="trailerId"
+        >
+          >
+        </ng-select>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="name">نام صاحب حساب</label>
+        <input class="form-control" formControlName="name" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="bankName">{{'BankName' | translate}}</label>
+        <ng-select
+          style="font-size: small;"
+          name="bankName"
+          id="bankName"
+          #bankName
+          [items]="bankNames"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="bankId"
+        ></ng-select>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label for="accNumber">{{'AccNumber' | translate}}</label>
+        <input class="form-control" formControlName="accNumber" />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label for="accCardNumber">{{'AccCardNumber' | translate}}</label>
+        <input class="form-control" formControlName="accCardNumber" />
+        <div
+          class="text-danger"
+          *ngIf="form.get('accCardNumber').errors?.validCardNumber"
+        >
+          شماره کارت عابر بانک نا معتبر است.
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <label for="accShaba">{{'AccShaba' | translate}}</label>
+        <input class="form-control" formControlName="accShaba" />
+
+        <div *ngIf="form.get('accShaba').errors?.validShaba">
+          شماره شبا نا معتبر است.
+        </div>
+      </div>
+      <div class="form-group col-md-6">
+        <input
+        id="checkbox0"
+        type="checkbox"
+        formControlName="isActive"
+      />
+      <label for="checkbox0">حساب فعال
+      </label></div>
+      <!-- <div class="form-group col-md-6">
+        <label for="description">{{'Description' | translate}}</label>
+        <input class="form-control" formControlName="description" />
+      </div> -->
+    </div>
+    <div style="border: 1px; border-color: Red;">
+      <label style="font-size: 10;">
+        <em>:هشدار</em> فقط بانکهای فعال در کادر امکان واریز دارد- در هنگان ثبت توجه شود
+        که عدم تطابق نوع بانک با حساب و اشتباه بودن اطلاعات موجب واریز نشدن
+        کرایه میگردد
+      </label>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

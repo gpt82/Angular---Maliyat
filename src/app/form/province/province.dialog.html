@@ -1,0 +1,42 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="form-group required" style="padding-top: 10px">
+      <label class="control-label" for="name">{{'Name' | translate}}</label>
+      <input class="form-control" id="name" formControlName="name" />
+      <!-- <div class="text-danger" *ngIf="code.invalid && (code.dirty || code.touched)">
+        <small *ngIf="code.errors?.required">{{'Code_Is_Required' | translate}}</small>
+        <small *ngIf="code.errors?.uniqueCode">{{'Duplicate_Code' | translate}}</small>
+      </div> -->
+    </div>
+    <div class="form-group " style="padding-top: 10px">
+      <label class="control-label" for="transTime">مدت تحویل به مقصد(ساعت)</label>
+      <input class="form-control" id="transTime" formControlName="transTime" />
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

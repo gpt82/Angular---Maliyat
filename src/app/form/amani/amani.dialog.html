@@ -1,0 +1,439 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content dir="rtl" style="display: contents;">
+  <form [formGroup]="form" style="padding-top: 10px; direction: rtl;">
+    <div class="form-row">
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="bodyNumber">
+          {{ 'BodyNumber' | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="bodyNumber"
+          formControlName="bodyNumber"
+          enLang
+          (blur)="onBlurBodyNumber()"
+        />
+      </div>
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="carType">
+          {{'CarTypeTitle' | translate}}
+        </label>
+        <ng-select
+          style="font-size: small;"
+          name="carType"
+          id="carType"
+          #carType
+          [items]="carTypes"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          required
+          formControlName="carTypeId"
+        ></ng-select>
+      </div>
+      <div class="form-group col-md-3 required">
+        <label class="control-label">{{ 'Date' | translate }}</label>
+        <mat-datepicker #exportDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="exportDatePicker"
+          (click)="popUpCalendar1()"
+          formControlName="exportDate"
+        />
+      </div>
+      <div class="form-group col-md-3 required">
+        <label for="branchId">شعبه خسارت وارده</label>
+        <ng-select
+          [items]="branchs"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="branchId"
+        ></ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4 required">
+        <label class="control-label" for="agendaId">
+          {{ 'WaybillNumber' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          name="agendas"
+          id="agendas"
+          [items]="agendas$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="agendasLoading"
+          [typeahead]="agendasInput$"
+          formControlName="agendaId"
+        ></ng-select>
+      </div>
+      <div class="form-group col-md-4 required">
+        <label class="control-label">{{ 'IssuerDate' | translate }}</label>
+        <mat-datepicker #issueDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="issueDatePicker"
+          (click)="popUpCalendar2()"
+          formControlName="issueDate"
+        />
+      </div>
+
+      <div class="form-group col-md-4 required">
+        <label class="control-label" for="issueLetterNo">
+          {{ 'IssueLetterNo' | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="issueLetterNo"
+          formControlName="issueLetterNo"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="agents">
+          {{ 'SenderName' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          name="agents"
+          id="agents"
+          [items]="senders$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="sendersLoading"
+          [typeahead]="sendersInput$"
+          formControlName="senderId"
+        ></ng-select>
+      </div>
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="senderId">
+          {{ 'Receiver' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="senderId"
+          [items]="receivers"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="receiverId"
+        ></ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="driverId">
+          {{ 'Driver' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="driverId"
+          [items]="drivers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="driversLoading"
+          [typeahead]="driversInput$"
+          formControlName="driverId"
+        ></ng-select>
+      </div>
+
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="trailerId">
+          {{ 'Trailer' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="trailerId"
+          [items]="trailers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="trailersLoading"
+          [typeahead]="trailersInput$"
+          formControlName="trailerId"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{
+            item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="guiltyDriverId">
+          {{ 'GuiltyDriver' | translate }}
+        </label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="guiltyDriverId"
+          [items]="drivers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="driversLoading"
+          [typeahead]="driversInput$"
+          formControlName="guiltyDriverId"
+        ></ng-select>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="trailerId">تریلی مقصر</label>
+        <ng-select
+          class="col-md-12 no-padding"
+          id="guiltyTrailerId"
+          [items]="trailers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="trailersLoading"
+          [typeahead]="trailersInput$"
+          formControlName="guiltyTrailerId"
+        >
+          <ng-template ng-option-tmp let-item="item">
+            {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{
+            item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+          </ng-template>
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-3 required">
+        <label class="control-label" for="fare">
+          {{ ('Fare' | translate) + (form.get('fare').value | ChakavakCurrency:
+          'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          [readonly]="!canEditFare"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="fare"
+          formControlName="fare"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('fare').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+      <div class="form-group col-md-3">
+        <label class="control-label" for="sixth1">
+          {{ 'یک ششم' + (form.get('sixth1').value | ChakavakCurrency:
+          'ریال':'p') }}
+        </label>
+        <input
+          class="form-control"
+          [readonly]="!canEditFare"
+          OnlyNumber="true"
+          mask="000000000000"
+          id="sixth1"
+          formControlName="sixth1"
+          autocomplete="off"
+        />
+        <div class="text-danger">
+          <small style="font-size: 12px;">
+            {{(+form.get('sixth1').value / 10 | numberToPersian) + ' تومان ' }}
+          </small>
+        </div>
+      </div>
+
+      <div class="form-group col-md-6">
+        <label class="control-label" for="trailerId"></label>
+        <div class="form-control">
+          <label class="radio-inline col-md-6">
+            <input
+              type="radio"
+              name="isGhabel30"
+              [value]="true"
+              formControlName="isGhabel30"
+            />
+            30 قابل
+          </label>
+          <label class="radio-inline col-md-6">
+            <input
+              type="radio"
+              name="isGhabel30"
+              [value]="false"
+              formControlName="isGhabel30"
+            />
+            30 غیرقابل
+          </label>
+        </div>
+      </div>
+    </div>
+    <!-- <div class="form-group">
+                <div class="col-md-2">
+                </div>
+                <div class="form-check form-check-inline col-md-4">
+                    <input class="form-check-input" type="radio" value="0" formControlName="ghabel30">
+                    <label class="form-check-label" for="inlineRadio1">30 قابل</label>
+                </div>
+                <div class="form-check form-check-inline col-md-4">
+                    <input class="form-check-input" type="radio" value="1" formControlName="ghabel30">
+                    <label class="form-check-label" for="inlineRadio1">30 غیر قابل</label>
+                </div>
+            </div> -->
+    <div class="form-row">
+      <div class="form-group col-md-12 required">
+        <label class="control-label" for="description">
+          {{ 'Description' | translate }}
+        </label>
+        <input
+          class="form-control"
+          id="description"
+          formControlName="description"
+        />
+      </div>
+    </div>
+    <!-- -------- 
+    <div class="form-row"> 
+      <app-file-upload-input
+        [maxCount]="3"
+        [img]=""
+        [uploaderType]="'UploaderType.Personal.CommissionDegrees'"
+        [temp]=""
+        (onComplate)="changeImageList($event)"
+        [imageNameList]="fileNames"
+      ></app-file-upload-input>
+    </div>
+    <div class="form-row">
+      <div fxLayout="column" fxFlex>
+        <div fxLayout="row wrap" fxLayoutAlign="start center">
+          <div class="list-item" *ngFor="let file of fileNames">
+            <div class="img-container" style="height: 140px;">
+              <img class="upload-image" src="{{file.imagePath}}" />
+            </div>
+            <div class="cover">
+              <button
+                mat-icon-button
+                (click)="deleteFile(file)"
+                color="accent"
+                matTooltip="حذف فایل"
+              >
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+     -------- -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions style="padding: 1px 0;">
+  <div class="row">
+    <div class="btn-toolbar">
+      <button mat-raised-button color="warn" (click)="onClose()" mat-button>
+        {{ 'Close' | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        style="margin-right: 2px; margin-left: 2px;"
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        *ngIf="!authService.isReadOnlyUser"
+        mat-button
+        color="primary"
+      >
+        {{ 'Save' | translate }}
+      </button>
+
+      <!-- <button mat-raised-button color="warn" (click)="openPhotoDialog()" mat-button>تصاویر </button>
+            <button mat-raised-button color="warn" (click)="download()" mat-button>دانلود </button> -->
+    </div>
+  </div>
+</mat-dialog-actions>
+
+<style>
+  .list-item {
+    border: 1px #bdbcbc solid;
+    width: 140px;
+    border-radius: 5px;
+    margin: 6px;
+    position: relative;
+    overflow: hidden;
+
+    .img-container {
+      background: #f7f5f5;
+      height: 140px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .img {
+        max-width: 100%;
+        max-height: 100%;
+      }
+    }
+
+    .file-name {
+      text-align: left;
+      padding: 0 3px;
+      text-overflow: ellipsis;
+      overflow: hidden;
+      white-space: nowrap;
+      direction: ltr;
+    }
+
+    .file-size {
+      position: absolute;
+      top: 0;
+      background: #5857b1;
+      left: 0;
+      direction: ltr;
+      border-radius: 6px 0 10px;
+      color: #fff;
+      padding: 0 5px;
+    }
+
+    .cover {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      animation: leftToRight 300ms;
+
+      .mat-icon-button {
+        background: #f1f1f1;
+        margin: 2px;
+      }
+    }
+
+    &:hover .cover {
+      display: flex;
+    }
+
+    .progress {
+      height: 5px;
+      direction: ltr;
+
+      .progress-bar {
+        width: 38%;
+        background-color: #5857b1;
+      }
+    }
+  }
+</style>

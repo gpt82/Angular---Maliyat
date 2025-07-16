@@ -1,0 +1,82 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="form-group">
+      <label for="geteManufacturerId">سازنده قطعه</label>
+      <ng-select
+        style="font-size: small;"
+        name="geteManufacturerId"
+        id="geteManufacturerId"
+        #geteManufacturerId
+        [items]="geteManufacturers"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        formControlName="geteManufacturerId"
+      ></ng-select>
+    </div>
+    <div class="form-group">
+      <label for="geteLoadingLocationId">محل بارگیری قطعه</label>
+      <ng-select
+        style="font-size: small;"
+        name="geteManufacturerId"
+        id="geteLoadingLocationId"
+        #geteLoadingLocationId
+        [items]="geteLoadingLocations"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        formControlName="geteLoadingLocationId"
+      ></ng-select>
+    </div>
+    <div class="form-group">
+      <label for="geteZoneId">  زون(منطقه)</label>
+      <ng-select
+        style="font-size: small;"
+        name="geteZoneId"
+        id="geteZoneId"
+        #geteZoneId
+        [items]="getZones"
+        bindLabel="title"
+        bindValue="id"
+        [selectOnTab]="true"
+        appendTo="body"
+        formControlName="geteZoneId"
+      ></ng-select>
+    </div>
+    <!-- <div class="form-group required" style="padding-top: 10px">
+      <label class="control-label" for="geteManufacturerId">{{'Name' | translate}}</label>
+      <input class="form-control" id="geteManufacturerId" formControlName="geteManufacturerId" />
+      <input class="form-control" id="geteLoadingLocationId" formControlName="geteLoadingLocationId" />
+      <input class="form-control" id="geteZoneId" formControlName="geteZoneId" />
+      
+    </div> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

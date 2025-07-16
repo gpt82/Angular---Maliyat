@@ -1,0 +1,56 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl">
+    <div class="row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label">{{ 'Date' | translate }}</label>
+        <mat-datepicker #registeredDatePicker></mat-datepicker>
+        <input
+          class="form-control"
+          [matDatepicker]="registeredDatePicker"
+          (click)="popUpCalendar1()"
+          formControlName="registeredDate"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group col-md-12">
+        <label class="control-label" for="description"
+          >{{'Description' | translate}}</label
+        >
+        <textarea
+          class="form-control"
+          rows="2"
+          id="description"
+          formControlName="description"
+        >
+        </textarea>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid"
+        (click)="onSave()"
+        mat-button
+        *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)"
+        color="primary"
+      >
+        {{'Save' | translate}}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

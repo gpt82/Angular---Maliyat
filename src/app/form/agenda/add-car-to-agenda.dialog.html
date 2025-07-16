@@ -1,0 +1,74 @@
+<p class="card-header bg-primary" style="color: white">
+    {{ data.dialogTitle }}
+</p>
+<mat-dialog-content style="height: 85% !important; direction: rtl">
+    <div class="form-row">
+        <div class="col-md-6">
+            <!--<div class="card-header bg-info">{{'AddNewCarToAgenda' | translate}}</div>-->
+            <!--<div class="card-body">-->
+            <!--<div class="alert alert-info" role="alert">-->
+            <!--{{'AddNewCarToAgenda' | translate}}-->
+            <!--</div>-->
+            <inline-add-car-to-agenda [agendaId]="data.agendaId" [car]="carDto" (carWasAdded)="carWasAddedSubscriber($event)">
+            </inline-add-car-to-agenda>
+            <!--</div>-->
+            <mat-dialog-actions>
+                <button type="button" class="btn btn-danger" (click)="onClose()">
+                    {{ 'Close' | translate }}
+                </button>
+                <button type="button" class="btn btn-primary" (click)="showAgendaCarsReport()">
+                    {{ 'AgendaCarsReport' | translate }}
+                </button>
+            </mat-dialog-actions>
+        </div>
+        <div class="col-md-6">
+            <!--<div class="alert alert-info" style="margin-bottom: 0px;" role="alert">-->
+            <!--<strong>{{'AgendasCar' | translate}}</strong>-->
+            <!--</div>-->
+            <kendo-grid #gridCars [data]="view | async" [resizable]="true" [selectable]="true" [filterable]="false">
+                <ng-template kendoGridToolbarTemplate>
+                    <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();" title=" حذف تمام فیلترها">
+                        <span class="material-icons">brush</span>
+                    </button>
+                    <div class="input-group col-md-10">
+                        <div class="row">
+                            <strong class="strong-font">شماره بدنه</strong>
+                            <input type="text" class="form-control" #bodyNumber name="bodyNumber" [(ngModel)]="bodyNum" enLang />
+                        </div>
+                        <button style="margin-right: 20px !important; margin-left: 5px !important" class="mat-lokup-button" mat-raised-button color="primary" (click)="addCar(bodyNumber.value)" type="button" md-dialog-close>
+                            <mat-icon>add_box</mat-icon>
+                        </button>
+
+                        <button class="mat-lokup-button" [disabled]="data.readOnly" mat-raised-button color="primary" (click)="onCarLookup()" type="button" md-dialog-close>
+                            <mat-icon>find_in_page</mat-icon>
+                        </button>
+                    </div>
+                </ng-template>
+                <kendo-grid-column width="35px" class="index">
+                    <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+                        {{ rowIndex + 1 }}
+                    </ng-template>
+                </kendo-grid-column>
+                <kendo-grid-column field="entity.carBodyNumber" title="{{ 'BodyNumber' | translate }}">
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.agentCode" title="{{ 'AgentCode' | translate }}">
+                </kendo-grid-column>
+
+                <kendo-grid-column field="entity.descriptionOfSupply" title="{{ 'Description' | translate }}">
+                </kendo-grid-column>
+
+                <kendo-grid-command-column title="{{ 'Operations' | translate }}">
+                    <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+                        <button class="grid-btn" mat-raised-button color="accent" [disabled]="dataItem.entity.state === 3" (click)="onEditCar(dataItem.entity)">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button class="grid-btn" mat-raised-button color="warn" delete-directive [disabled]="dataItem.entity.state === 2" (onDelete)="onDeleteById(dataItem.entity.carId)" *ngIf="!authService.isReadOnlyUser">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </ng-template>
+                </kendo-grid-command-column>
+            </kendo-grid>
+        </div>
+    </div>
+</mat-dialog-content>

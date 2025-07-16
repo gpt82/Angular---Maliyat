@@ -1,0 +1,63 @@
+<!-- <h2 mat-dialog-title>
+  <div class="alert alert-info" role="alert">
+    <strong> {{data.dialogTitle}}</strong>
+  </div>
+</h2>
+<div class="horizontal-line"></div>
+<mat-dialog-content style="direction:rtl">
+  <div class="form-row col-md-12" style="height:100%">
+
+
+      <div class="card form-row col-md-12" style="height:100%">
+        <div class="card-body">
+
+          <kendo-grid [kendoGridSelectBy]="id" [selectedKeys]="selectedRowIds" #gridBankAccounts [data]="view | async"  [selectable]="true"
+                      [pageSize]="state.take" [skip]="state.skip"  [sort]="state.sort" [filter]="state.filter" [sortable]="true" [pageable]="{info: true,pageSizes:[10,20,30,40,50,100,200,500],refresh:true}"
+                      [filterable]="false" (dataStateChange)="dataStateChange($event)">
+
+            <ng-template kendoGridToolbarTemplate>
+                <button type="button" class="btn btn-dark" style="float: left;" (click)="removeState();" title=" حذف تمام فیلترها">
+          <span class="material-icons">brush</span>
+        </button>
+
+              <button type="button" class="btn btn-primary" (click)="onCreate()">{{ 'Create' | translate }}</button>
+              <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>{{'Close' | translate}}</button>
+
+            </ng-template>
+            <kendo-grid-column field="entity.bankAccountBankName" title="{{'BankName' | translate}}">
+            </kendo-grid-column>
+
+            <kendo-grid-column field="entity.bankAccountAccNumber" title="{{'BankAccountAccNumber' | translate}}">
+            </kendo-grid-column>
+
+            <kendo-grid-column field="entity.bankAccountAccCardNumber" title="{{'BankAccountAccCardNumber' | translate}}">
+            </kendo-grid-column>
+
+            <kendo-grid-column field="entity.bankAccountShaba" title="{{'BankAccountShaba' | translate}}">
+            </kendo-grid-column>
+
+            <kendo-grid-command-column title="{{'Operations' | translate}}">
+              <ng-template let-dataItem="dataItem" kendoGridCellTemplate let-isNew="isNew">
+                <button mat-raised-button color="primary" (click)="onEdit(dataItem.entity)">
+                  <mat-icon>edit</mat-icon>
+                </button>
+                <button mat-raised-button color="warn" delete-directive (onDelete)="onDeleteById(dataItem.entity.id)" *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </ng-template>
+            </kendo-grid-command-column>
+          </kendo-grid>
+
+        </div>
+      </div>
+
+
+  </div>
+  <form #form="ngForm" class="form-inline">
+
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <!--<button mat-raised-button color="warn" md-dialog-close (click)="onClose()">{{'Close' | translate}}</button>-->
+<!--<button mat-raised-button [disabled]="!form.valid" (click)="onSave()" mat-button *ngIf="!(authService.isAccUser || authService.isReadOnlyUser)" color="primary">{{'Save' | translate}}</button>-->
+<!-- </mat-dialog-actions> -->

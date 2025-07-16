@@ -1,0 +1,67 @@
+<p class="card-header bg-primary" style="color: white;">
+  {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <!-- <ng-container *ngFor="let group of form.controls | keyvalue">
+
+      <div style="margin:20px;" [formGroup]="group.value">
+        <label for="">{{group.key}} test</label>
+        <input type="text" formControlName="name">
+        <button type="button" (click)="onAddMedicine(group.value)" [disabled]="!group.value.valid">Add Medicine</button>
+        <div formArrayName="medicineList">
+          <div *ngFor="let item of medicineArray(group.value).controls; let i = index" [formGroupName]="i">
+            <label for="">Medicine Name</label>
+            <input formControlName="name">
+            <label for="">Medicine Count</label>
+            <input formControlName="count">
+            <button (click)="removeMedicine(group.value, i)">remove</button>
+          </div>
+        </div> -----------------
+      </div>  -->
+
+
+   
+    <div class="row">
+      <div class="form-group col-md-6">
+        <label class="control-label">تاریخ </label>
+        <mat-datepicker #issueDatePicker></mat-datepicker>
+        <input class="form-control" [matDatepicker]="issueDatePicker" (click)="popUpCalendar1()"
+          formControlName="issueDate" />
+      </div>
+
+
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="tonnageTypes">
+          {{ 'TonnageTypeTitle' | translate }}
+        </label>
+        <ng-select style="font-size: small;" id="tonnageTypes" formControlName="tonnageTypeId"
+          [items]="tonnageTypes$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body"
+          [loading]="tonnageTypesLoading" [typeahead]="tonnageTypesInput$"></ng-select>
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="count">
+          تعداد
+        </label>
+        <input class="form-control" id="count" formControlName="count" />
+      </div>
+    </div>
+
+    <!-- </ng-container> -->
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{ 'Close' | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button mat-raised-button [disabled]="!form.valid" (click)="onSave()" mat-button color="primary">
+        {{ 'Save' | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

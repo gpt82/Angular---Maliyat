@@ -1,0 +1,122 @@
+<p class="card-header bg-primary" style="color: white">
+    {{ data.dialogTitle }}
+</p>
+<mat-dialog-content dir="rtl" style="display: contents">
+    <form [formGroup]="form" style="padding-top: 10px; direction: rtl">
+        <div class="form-row">
+            <div class="form-group col-md-4 required">
+                <label class="control-label" for="bodyNumber">{{ 'BodyNumber' | translate }}</label>
+                <input class="form-control" id="bodyNumber" formControlName="bodyNumber" enLang (blur)="onBlurBodyNumber()" />
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label" for="carType">{{'CarTypeTitle' | translate}}</label>
+                <ng-select style="font-size: small" name="carType" id="carType" #carType [items]="carTypes" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="carTypeId">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-4 required">
+                <label class="control-label">{{ 'Date' | translate }}</label>
+                <mat-datepicker #exportDatePicker></mat-datepicker>
+                <input class="form-control" [matDatepicker]="exportDatePicker" (click)="popUpCalendar1()" formControlName="exportDate" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="agents">{{ 'SenderName' | translate }}</label>
+                <ng-select class="col-md-12 no-padding" name="agents" id="agents" [items]="senders$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" (keydown)="OnNgSelectKeyDown($event, 'receiver')" [loading]="sendersLoading" [typeahead]="sendersInput$"
+                    formControlName="senderId">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="senderId">{{ 'Receiver' | translate }}</label>
+                <ng-select class="col-md-12 no-padding" id="senderId" [items]="receivers" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" (keydown)="OnNgSelectKeyDown($event, 'sender')" formControlName="receiverId">
+                </ng-select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="driverId">{{ 'Driver' | translate }}</label>
+                <ng-select class="col-md-12 no-padding" id="driverId" [items]="drivers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" (keydown)="OnNgSelectKeyDown($event, 'driver')" [loading]="driversLoading" [typeahead]="driversInput$"
+                    formControlName="driverId">
+                </ng-select>
+            </div>
+
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="trailerId">{{'Trailer' | translate }}</label>
+                <ng-select class="col-md-12 no-padding" id="trailerId" [items]="trailers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" (keydown)="OnNgSelectKeyDown($event, 'trailer')" [loading]="trailersLoading" [typeahead]="trailersInput$"
+                    formControlName="trailerId">
+                    <ng-template ng-option-tmp let-item="item">
+                        {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{ item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+                    </ng-template>
+                </ng-select>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label class="control-label" for="guiltyDriverId">{{ 'GuiltyDriver' | translate }}</label>
+                <ng-select class="col-md-12 no-padding" id="guiltyDriverId" [items]="drivers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="driversLoading" [typeahead]="driversInput$" formControlName="guiltyDriverId">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-6">
+                <label class="control-label" for="guiltyTrailerId">ناوگان مقصر</label>
+                <ng-select class="col-md-12 no-padding" id="guiltyTrailerId" [items]="trailers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="trailersLoading" [typeahead]="trailersInput$" formControlName="guiltyTrailerId">
+                    <ng-template ng-option-tmp let-item="item">
+                        {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{ item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+                    </ng-template>
+                </ng-select>
+            </div>
+            <!-- <div class="form-group  col-md-6 ">
+        <label class="control-label" for="guiltyTrailerId">{{
+              'Trailer' | translate
+            }}</label>
+                <ng-select class="col-md-12 no-padding" id="guiltyTrailerId" [items]="trailers$ | async" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" [loading]="trailersLoading" [typeahead]="trailersInput$" formControlName="guiltyTrailerId">
+                    <ng-template ng-option-tmp let-item="item">
+                        {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{ item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+                    </ng-template>
+                </ng-select>
+            </div> -->
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-4 required">
+                <label class="control-label" for="fare">{{ ('Fare' | translate) + (form.get('fare').value | ChakavakCurrency:
+          'ریال':'p') }}</label>
+                <input class="form-control" [readonly]="!canEditFare" OnlyNumber="true" mask="000000000000" id="fare" formControlName="fare" autocomplete="off"/>
+                <div class="text-danger">
+                    <small style="font-size: 12px;">
+                      {{(+form.get('fare').value / 10 | numberToPersian) +
+                      ' تومان ' }}
+                    </small>
+                  </div>
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label">{{ 'IssuerDate' | translate }}</label>
+                <mat-datepicker #issueDatePicker></mat-datepicker>
+                <input class="form-control" [matDatepicker]="issueDatePicker" (click)="popUpCalendar2()" formControlName="issueDate" />
+            </div>
+
+            <div class="form-group col-md-4">
+                <label class="control-label" for="issueLetterNo">{{ 'IssueLetterNo' | translate }}</label>
+                <input class="form-control" id="issueLetterNo" formControlName="issueLetterNo" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label class="control-label" for="description">{{ 'Description' | translate }}</label>
+                <input class="form-control" id="description" formControlName="description" />
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions style="padding: 1px 0">
+    <div class="row">
+        <div class="btn-toolbar">
+            <button mat-raised-button color="warn" (click)="onClose()" mat-button>
+        {{ 'Close' | translate }}
+      </button>
+            <!-- Can optionally provide a result for the closing dialog. -->
+            <button style="margin-right: 2px; margin-left: 2px" mat-raised-button [disabled]="!form.valid" (click)="onSave()" *ngIf="!(authService.isReadOnlyUser)" mat-button color="primary">
+        {{ 'Save' | translate }}
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

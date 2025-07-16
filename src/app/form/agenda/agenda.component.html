@@ -1,0 +1,1555 @@
+<div class="app-body">
+  <mat-toolbar
+    [hidden]="isMobile"
+    color="primary"
+    class="main-content-toolbar app-actionbar"
+  >
+    <div class="grid-alert grid-alert-info" role="alert">
+      <strong>{{ 'Agendas' | translate }}</strong>
+    </div>
+  </mat-toolbar>
+  <ng-template #template let-anchor>
+    <span>{{ anchor.nativeElement.innerText }}</span>
+  </ng-template>
+  <div
+    class="table-responsive"
+    [ngStyle]="{ top: isMobile ? '1px' : '35px' }"
+    kendoTooltip
+    showOn="none"
+    [tooltipTemplate]="template"
+    filter=".k-grid td"
+    (mouseover)="showTooltip($event)"
+  >
+  <!-- (selectionChange)="onSelectionChange($event)" -->
+    <kendo-grid
+      [kendoGridSelectBy]="id"
+      [selectedKeys]="selectedRowIds"
+      [data]="view | async"
+      [selectable]="true"
+      
+      [pageSize]="state.take"
+      [skip]="state.skip"
+      [sort]="state.sort"
+      [filter]="state.filter"
+      [sortable]="{
+        allowUnsort: true,
+        mode: 'multiple'
+      }"
+      [resizable]="true"
+      [pageable]="{
+        buttonCount: 5,
+        info: !isMobile,
+        pageSizes: [15, 30, 50, 100, 500, 5000, 10000],
+        previousNext: !isMobile
+      }"
+      filterable="menu"
+      (dataStateChange)="dataStateChange($event)"
+      [rowClass]="getRowClass"
+    >
+      <ng-template kendoGridToolbarTemplate>
+        <button
+          type="button"
+          class="btn btn-dark"
+          style="float: left;"
+          (click)="removeState()"
+          title=" حذف تمام فیلترها"
+        >
+          <span class="material-icons">brush</span>
+        </button>
+        <kendo-grid-column-chooser
+          autoSync="true"
+          [allowHideAll]="false"
+        ></kendo-grid-column-chooser>
+        <kendo-menu
+          style="display: -webkit-inline-box;"
+          [items]="menuItems"
+          (select)="onSelect($event)"
+        ></kendo-menu>
+        <!-- <button type="button" class="btn" *ngIf="authService.isSuperAdmin"
+          (click)="onInvoicePrintPreview()">
+          صورت حساب تسویه
+        </button>-->
+        <button type="button" class="btn" kendoGridExcelCommand>
+          {{ 'ExportToExcel' | translate }}
+        </button>
+      </ng-template>
+      <kendo-grid-column [hidden]="isMobile" width="35px" class="index">
+        <ng-template kendoGridCellTemplate let-dataItem let-rowIndex="rowIndex">
+          {{ rowIndex + 1 }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.cargoCode"
+        [hidden]="true"
+        width="90px"
+        title="{{ 'CargoCode' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.waybillNumber"
+        width="130px"
+        title="{{ 'WaybillNumber' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.persianExportDate"
+        width="100px"
+        title="{{ 'ExportDate' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+       <!-- =========== -->
+       <!-- <kendo-grid-column field="entity.exportDate" title="Order Date">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{dataItem.entity.exportDate | jalali}}
+        </ng-template>
+        <ng-template kendoGridFilterMenuTemplate let-filter let-column="column" let-filterService="filterService">
+          <kendo-grid-date-filter-menu [column]="column" [filter]="filter | jalali" [filterService]="filterService">
+          </kendo-grid-date-filter-menu>
+        </ng-template>
+      </kendo-grid-column> -->
+
+<!-- =============== -->
+
+      <kendo-grid-column
+        field="entity.persianCreationDate"
+        width="90px"
+        title="تاریخ ایجاد"
+        [hidden]="true"
+        *ngIf="canEditPreFarepaid"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+     
+
+      <kendo-grid-column
+        field="entity.persianLastModifiedDate"
+        width="90px"
+        title="آخرین تغییر"
+        [hidden]="true"
+        *ngIf="canEditPreFarepaid"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.persianReceivedDate"
+        width="100px"
+        title="{{ 'AgendaReceivedDate' | translate }}"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column
+        [hidden]="isMobile"
+        field="entity.receiverCity"
+        width="100px"
+        title="{{ 'Target' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.receiverState"
+        width="100px"
+        title="استان مقصد"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.receiverCode"
+        width="220px"
+        title="{{ 'AgentCode' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="eq"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="isMobile"
+        field="entity.senderName"
+        width="220px"
+        title="{{ 'SenderName' | translate }}"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <!--<kendo-grid-column field="entity.receiverName" title="{{'AgentName' | translate}}">-->
+      <!--</kendo-grid-column>-->
+      <kendo-grid-column
+        [hidden]="isMobile"
+        field="entity.driverFullName"
+        width="180px"
+        title="{{ 'DriverName' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.driverBankAccNo"
+        width="180px"
+        title="شماره حساب راننده"
+        filterable="false"
+      >
+        
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.driverAccOwner"
+        width="180px"
+        title="نام صاحب حساب راننده"
+        filterable="false"
+      >        
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.smartCardNumber"
+        width="100px"
+        title="هوشمند راننده"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="eq"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.driverNoID"
+        width="100px"
+        title="کد ملی راننده"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="eq"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.driverMobile"
+        width="100px"
+        title="موبایل راننده"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="eq"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column        
+        field="entity.trailerPlaque"
+        width="130px"
+        title="{{ 'Plaque' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+      [hidden]="true"
+      field="entity.trailerSmartCardNumber"
+      width="130px"
+      title="هوشمند تریلر"
+    >
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-string-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="contains"
+        >
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.trailerTafsiliAccount"
+        width="130px"
+        title="تفصیلی"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.invoiceNo"
+        width="130px"
+        title="صورتحساب"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.persianInvoiceDate"
+        width="100px"
+        title="تاریخ صورتحساب "
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+      [hidden]="true"
+      field="entity.trailerTonnageType"
+      width="150px"
+      title="بارگیر2"
+    >
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-string-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="contains"
+        >
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+      <kendo-grid-column
+      field="entity.trailerTonnageTypeId"
+      width="140px"
+      title="بارگیر"
+      [hidden]="true"
+    >
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-column="column"
+        let-filter="filter"
+        let-filterService="filterService"
+      >
+        <multicheck-filter
+          [isPrimitive]="false"
+          [field]="column.field"
+          [currentFilter]="filter"
+          [filterService]="filterService"
+          textField="title"
+          valueField="id"
+          [data]="tonnageTypes"
+        ></multicheck-filter>
+      </ng-template>
+      <ng-template kendoGridCellTemplate let-dataItem>
+        {{ dataItem.entity.trailerTonnageType }}
+      </ng-template>
+    </kendo-grid-column>
+     
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.fare"
+        width="150px"
+        title="{{ 'Fare' | translate }}"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ intl.formatNumber(dataItem.entity.fare) }}
+        </ng-template>
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+          ></kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.milkRun"
+        width="150px"
+        title="{{ 'MilkRun' | translate }}"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ intl.formatNumber(dataItem.entity.milkRun) }}
+        </ng-template>
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+          ></kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.preFare"
+        width="150px"
+        title="{{ 'PreFare' | translate }}"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ intl.formatNumber(dataItem.entity.preFare) }}
+        </ng-template>
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+          ></kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.reward"
+        width="150px"
+        title="{{ 'Reward' | translate }}"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ intl.formatNumber(dataItem.entity.reward) }}
+        </ng-template>
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+          ></kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.remainingFare"
+        width="150px"
+        title="{{ 'RemainingFare' | translate }}"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ intl.formatNumber(dataItem.entity.remainingFare) }}
+        </ng-template>
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+          ></kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+
+      <kendo-grid-column
+        field="entity.isReceived"
+        filter="boolean"
+        width="100px"
+        title="{{ 'AgendaState' | translate }}"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isReceived"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.isBorrowLoan"
+        filter="boolean"
+        width="100px"
+        title="ناوگان دارای وام"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isBorrowLoan"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.isKafi"
+        filter="boolean"
+        width="100px"
+        title=" کفی "
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isKafi"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <!-- <kendo-grid-column field="entity.isCashBill" filter="boolean" width="100px" title="{{ 'IsCashBill' | translate }}"
+        [hidden]="true">
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input type="checkbox" [checked]="dataItem.entity.isCashBill" disabled />
+        </ng-template>
+      </kendo-grid-column> -->
+
+      <kendo-grid-column
+        field="entity.isCashBillPaid"
+        filter="boolean"
+        width="120px"
+        title="{{ 'IsCashBillPaid' | translate }}"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isCashBillPaid"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.isDelivered"
+        filter="boolean"
+        width="100px"
+        title="{{ 'IsDelivered' | translate }}"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isDelivered"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.isCashPaidConfirmed"
+        filter="boolean"
+        width="110px"
+        title="نقدی تایید شده"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isCashPaidConfirmed"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.fareContract"
+        width="90px"
+        title="قرارداد"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-isempty-operator></kendo-filter-isempty-operator>
+            <kendo-filter-isnotempty-operator></kendo-filter-isnotempty-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.isPreFarePaid"
+        filter="boolean"
+        width="110px"
+        title="پیشکرایه پرداخت شده"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isPreFarePaid"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.persianPreFarePayDate"
+        width="100px"
+        title="تاریخ پرداخت پیشکرایه"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.isPaidlvl2"
+        filter="boolean"
+        width="110px"
+        title="بارنامه قطعه صورت  شده"
+        [hidden]="true"
+      >
+        <ng-template kendoGridCellTemplate let-dataItem>
+          <input
+            type="checkbox"
+            [checked]="dataItem.entity.isPaidlvl2"
+            disabled
+          />
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.paidlvl2Number"
+        width="100px"
+        title="شماره صورتحساب قطعه"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="eq"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.persianPaidlvl2Date"
+        title="تاریخ صورت قطعه"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            operator="startswith"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-startswith-operator></kendo-filter-startswith-operator>
+            <kendo-filter-endswith-operator></kendo-filter-endswith-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        [hidden]="true"
+        field="entity.carCount"
+        width="100px"
+        title="{{ 'CarCount' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            decimals="0"
+            operator="eq"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <!-- <kendo-grid-column
+        [hidden]="true"
+        field="entity.carEntered"
+        width="100px"
+        title="تعداد در صورتجلسه"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            decimals="0"
+            operator="eq"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column> -->
+      <kendo-grid-column
+        field="entity.milkRunCount"
+        width="100px"
+        title="تعداد میلک ران"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-numeric-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            decimals="0"
+            operator="eq"
+          >
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+            <kendo-filter-gte-operator></kendo-filter-gte-operator>
+            <kendo-filter-lte-operator></kendo-filter-lte-operator>
+          </kendo-grid-numeric-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.description"
+        width="100px"
+        title="{{ 'Description' | translate }}"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-filter
+          let-column="column"
+          let-filterService="filterService"
+        >
+          <kendo-grid-string-filter-menu
+            [column]="column"
+            [filter]="filter"
+            [filterService]="filterService"
+            [extra]="false"
+            operator="contains"
+          >
+            <kendo-filter-contains-operator></kendo-filter-contains-operator>
+            <kendo-filter-eq-operator></kendo-filter-eq-operator>
+          </kendo-grid-string-filter-menu>
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.payTypeId"
+        width="120px"
+        title="{{ 'AgendaPayTypes' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService"
+        >
+          <multicheck-filter
+            [isPrimitive]="false"
+            [field]="column.field"
+            [currentFilter]="filter"
+            [filterService]="filterService"
+            textField="title"
+            valueField="id"
+            [data]="payTypes"
+          ></multicheck-filter>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.entity.payTypeName }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.trailerOwnerTypeId"
+        width="120px"
+        title="مالکیت ناوگان"
+        [hidden]="true"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService"
+        >
+          <multicheck-filter
+            [isPrimitive]="false"
+            [field]="column.field"
+            [currentFilter]="filter"
+            [filterService]="filterService"
+            textField="title"
+            valueField="id"
+            [data]="trailerOwnerTypes"
+          ></multicheck-filter>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.entity.trailerOwnerType }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+      field="entity.userNameReceive"
+      width="100px"
+      title="رسید توسط"
+      [hidden]="true"
+    >
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-string-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="eq"
+        >
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+      <kendo-grid-column
+      field="entity.pocketNumber"
+      width="100px"
+      title=" پاکت"
+      [hidden]="true"
+    >
+      <ng-template
+        kendoGridFilterMenuTemplate
+        let-filter
+        let-column="column"
+        let-filterService="filterService"
+      >
+        <kendo-grid-string-filter-menu
+          [column]="column"
+          [filter]="filter"
+          [filterService]="filterService"
+          [extra]="false"
+          operator="eq"
+        >
+          <kendo-filter-contains-operator></kendo-filter-contains-operator>
+          <kendo-filter-eq-operator></kendo-filter-eq-operator>
+        </kendo-grid-string-filter-menu>
+      </ng-template>
+    </kendo-grid-column>
+    <kendo-grid-column
+    field="entity.distance"
+    width="50px"
+    title=" مسافت"
+    [hidden]="true"    
+    filterable="false"
+  >
+    
+  </kendo-grid-column>
+      <kendo-grid-column
+        field="entity.branchId"
+        width="140px"
+        title="{{ 'BranchTitle' | translate }}"
+      >
+        <ng-template
+          kendoGridFilterMenuTemplate
+          let-column="column"
+          let-filter="filter"
+          let-filterService="filterService"
+        >
+          <multicheck-filter
+            [isPrimitive]="false"
+            [field]="column.field"
+            [currentFilter]="filter"
+            [filterService]="filterService"
+            textField="title"
+            valueField="id"
+            [data]="branches"
+          ></multicheck-filter>
+        </ng-template>
+        <ng-template kendoGridCellTemplate let-dataItem>
+          {{ dataItem.entity.branchName }}
+        </ng-template>
+      </kendo-grid-column>
+      <kendo-grid-column
+      field="entity.branchName"
+      width="100px"
+      title="شعبه 2 "
+      [hidden]="true"
+      filterable="false"
+    >
+    </kendo-grid-column>
+      <kendo-grid-command-column
+        [hidden]="isMobile"
+        title="{{ 'Operations' | translate }}"
+        *ngIf="!authService.isAccUser"
+      >
+        <ng-template
+          let-dataItem="dataItem"
+          kendoGridCellTemplate
+          let-isNew="isNew"
+        >
+          <button
+            *ngIf="
+              authService.isSuperAdmin ||
+              branchIds.includes(dataItem.entity.branchId) || canEditDSC
+            "
+            title="ویرایش"
+            class="grid-btn"
+            [disabled]="dataItem.entity.state === 2"
+            mat-raised-button
+            color="primary"
+            (click)="onEdit(dataItem.entity.id)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+
+          <button
+            *ngIf="
+              !authService.isBodyTransAgenda &&
+              (authService.isSuperAdmin ||
+                branchIds.includes(dataItem.entity.branchId))
+            "
+            class="grid-btn"
+            [disabled]="dataItem.entity.state === 2"
+            mat-raised-button
+            color="primary"
+            title="لیست سواریهای حمل شده"
+            (click)="onList(dataItem.entity)"
+          >
+            <mat-icon>note_add</mat-icon>
+          </button>
+          <!-- <button
+          class="grid-btn"  mat-raised-button color="primary"
+          (click)="onListAgendaAutoParts(dataItem.entity)">
+          <mat-icon>note_add</mat-icon>
+        </button> -->
+          <button
+            *ngIf="!authService.isReadOnlyUser && authService.isSuperAdmin"
+            class="grid-btn"
+            [disabled]="dataItem.entity.state === 2"
+            title="حذف بارنامه"
+            mat-raised-button
+            color="warn"
+            delete-directive
+            (onDelete)="onDeleteById(dataItem.entity.id)"
+          >
+            <mat-icon>delete</mat-icon>
+          </button>
+          <button
+            *ngIf="
+              authService.isSuperAdmin ||
+              branchIds.includes(dataItem.entity.branchId)
+            "
+            class="grid-btn"
+            [ngClass]="{
+              'btn btn-secondary': dataItem.entity.isDelivered,
+              'btn-warning': !dataItem.entity.isDelivered
+            }"
+            [disabled]="dataItem.entity.state === 2"
+            mat-raised-button
+            title="تایید رسیدن بار به نمایندگی"
+            (click)="onAgendaDelivered()"
+          >
+            <mat-icon>check_circle</mat-icon>
+          </button>
+          <button
+            *ngIf="canEditCashBillPaid"
+            class="grid-btn"
+            [ngClass]="{
+              'btn btn-secondary': dataItem.entity.isCashBillPaid,
+              'btn-info': !dataItem.entity.isCashBillPaid
+            }"
+            [disabled]="dataItem.entity.state === 2"
+            mat-raised-button
+            (click)="onAgendaCashBillPaid()"
+            title="تایید پرداخت نقدی"
+          >
+            <mat-icon>attach_money</mat-icon>
+          </button>
+          <button
+            *ngIf="authService.isSuperAdmin && dataItem.entity.isCashBill"
+            class="grid-btn"
+            [ngClass]="{
+              'btn btn-secondary': dataItem.entity.isCashBillPaid,
+              'btn-info': !dataItem.entity.isCashBillPaid
+            }"
+            [disabled]="dataItem.entity.state === 2"
+            mat-raised-button
+            title="تسویه شده یا خیر؟"
+          >
+            <mat-icon>attach_money</mat-icon>
+          </button>
+          <!-- [disabled]="dataItem.entity.isPayed==true" -->
+          <button
+            *ngIf="authService.isSuperAdmin || authService.isAccUser"
+            class="grid-btn"
+            mat-raised-button
+            (click)="onPreFarePaid(dataItem.entity.id)"
+            title="  تایید پرداخت پیشکرایه"
+            [disabled]="!canEditPreFarepaid && dataItem.entity.isPreFarePaid"
+          >
+            <mat-icon
+              [ngStyle]="{
+                color:
+                  canEditPreFarepaid && dataItem.entity.isPreFarePaid
+                    ? 'red'
+                    : 'black'
+              }"
+            >
+              local_parking
+            </mat-icon>
+          </button>
+          <button
+            class="grid-btn"
+            mat-raised-button
+            (click)="onSetReceipt(dataItem.entity)"
+            title="  تایید پرداخت بارنامه "
+            [disabled]="!canEditPayGete && dataItem.entity.isPaidlvl2"
+          >
+            <!--*ngIf="dataItem.entity.branchName.includes('قطعه')"-->
+            <mat-icon
+              [ngStyle]="{
+                color: dataItem.entity.isPaidlvl2 ? '#6BFF33' : 'black'
+              }"
+            >
+              playlist_add_check
+            </mat-icon>
+          </button>
+          <button
+            class="grid-btn"
+            mat-raised-button
+            (click)="onCashPayConfirm(dataItem.entity.id)"
+            title="تایید توسط مدیر"
+            *ngIf="enableCashPayConfirm && dataItem.entity.payTypeId == 2"
+            [disabled]="dataItem.entity.isCashPaidConfirmed"
+          >
+            <mat-icon>done</mat-icon>
+          </button>
+          <button
+            *ngIf="isAcclvl3()"
+            title="بستن کامل بارنامه"
+            class="grid-btn"
+            mat-raised-button
+            color="warn"
+            (click)="onAgendaMoved2Acc(dataItem.entity)"
+          >
+            <mat-icon [ngStyle]="{
+              color: dataItem.entity.isMoved2Acc ? '#6BFF33' : 'black'
+            }">lock</mat-icon>
+          </button>
+        </ng-template>
+      </kendo-grid-command-column>
+      <!-- //////////////////////// -->
+      <kendo-grid-command-column
+        title="{{ 'Operations' | translate }}"
+        *ngIf="authService.isAccUser"
+      >
+        <ng-template
+          let-dataItem="dataItem"
+          kendoGridCellTemplate
+          let-isNew="isNew"
+        >
+          <button
+            class="grid-btn"
+            [disabled]="dataItem.entity.state === 2"
+            mat-raised-button
+            color="primary"
+            (click)="onEdit(dataItem.entity.id)"
+          >
+            <mat-icon>edit</mat-icon>
+          </button>
+          <button
+            class="grid-btn"
+            mat-raised-button
+            (click)="onPreFarePaid(dataItem.entity.id)"
+            title="  تایید پرداخت پیشکرایه"
+            [disabled]="dataItem.entity.isPreFarePaid"
+          >
+            <mat-icon>local_parking</mat-icon>
+          </button>
+          <button
+            class="grid-btn"
+            mat-raised-button
+            (click)="onSetReceipt(dataItem.entity)"
+            title="  تایید پرداخت بارنامه "
+            [disabled]="!canEditPayGete && dataItem.entity.isPaidlvl2"
+          >
+            <!--*ngIf="dataItem.entity.branchName.includes('قطعه')"-->
+            <mat-icon
+              [ngStyle]="{
+                color: dataItem.entity.isPaidlvl2 ? '#6BFF33' : 'black'
+              }"
+            >
+              playlist_add_check
+            </mat-icon>
+          </button>
+        </ng-template>
+      </kendo-grid-command-column>
+      <!-- /////////////////////// -->
+      <kendo-grid-excel fileName="َAgenda.xlsx"></kendo-grid-excel>
+      <ng-template
+        kendoGridDetailTemplate
+        let-dataItem
+        [kendoGridDetailTemplateShowIf]="authService.isMobile"
+      >
+        <table>
+          <tr>
+            <td>
+              <strong>{{ 'CargoCode' | translate }}:</strong>
+              {{ dataItem.entity.cargoCode }}
+            </td>
+            <td>
+              <strong>{{ 'AgendaReceivedDate' | translate }}:</strong>
+              {{ dataItem.entity.persianReceivedDate }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{{ 'Target' | translate }}:</strong>
+              {{ dataItem.entity.receiverCity }}
+            </td>
+            <td>
+              <strong>{{ 'AgentCode' | translate }}:</strong>
+              {{ dataItem.entity.receiverCode }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{{ 'DriverName' | translate }}:</strong>
+              {{ dataItem.entity.driverFullName }}
+            </td>
+            <td>
+              <strong>{{ 'Plaque' | translate }}:</strong>
+              {{ dataItem.entity.trailerPlaque }}
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <strong>{{ 'IsCashBill' | translate }}:</strong>
+              <input
+                type="checkbox"
+                [checked]="dataItem.entity.isCashBill"
+                disabled
+              />
+            </td>
+            <td>
+              <strong>{{ 'IsCashBillPaid' | translate }}:</strong>
+              <input
+                type="checkbox"
+                [checked]="dataItem.entity.isCashBillPaid"
+                disabled
+              />
+            </td>
+          </tr>
+        </table>
+        <button
+          *ngIf="
+            authService.isSuperAdmin ||
+            branchIds.includes(dataItem.entity.branchId)
+          "
+          class="grid-btn"
+          [disabled]="dataItem.entity.state === 2"
+          mat-raised-button
+          color="primary"
+          (click)="onEdit(dataItem.entity.id)"
+        >
+          <mat-icon>edit</mat-icon>
+        </button>
+        <button
+          *ngIf="
+            !authService.isBodyTransAgenda &&
+            (authService.isSuperAdmin ||
+              branchIds.includes(dataItem.entity.branchId))
+          "
+          class="grid-btn"
+          [disabled]="dataItem.entity.state === 2"
+          mat-raised-button
+          color="primary"
+          (click)="onList(dataItem.entity)"
+        >
+          <mat-icon>note_add</mat-icon>
+        </button>
+        <!-- <button ||  dataItem.entity.branchId === branchId
+          class="grid-btn"  mat-raised-button color="primary"
+          (click)="onListAgendaAutoParts(dataItem.entity)">
+          <mat-icon>note_add</mat-icon>
+        </button> -->
+        <button
+          *ngIf="authService.isSuperAdmin"
+          class="grid-btn"
+          [disabled]="dataItem.entity.state === 2"
+          mat-raised-button
+          color="warn"
+          delete-directive
+          (onDelete)="onDeleteById(dataItem.entity.id)"
+        >
+          <mat-icon>delete</mat-icon>
+        </button>
+        <button
+          *ngIf="authService.isSuperAdmin"
+          class="grid-btn"
+          [ngClass]="{
+            'btn btn-secondary': dataItem.entity.isDelivered,
+            'btn-warning': !dataItem.entity.isDelivered
+          }"
+          [disabled]="dataItem.entity.state === 2"
+          mat-raised-button
+          (click)="onAgendaDelivered()"
+        >
+          <mat-icon>check_circle</mat-icon>
+        </button>
+        <button
+          *ngIf="authService.isSuperAdmin"
+          class="grid-btn"
+          [ngClass]="{
+            'btn btn-secondary': dataItem.entity.isCashBillPaid,
+            'btn-info': !dataItem.entity.isCashBillPaid
+          }"
+          [disabled]="dataItem.entity.state === 2"
+          mat-raised-button
+          (click)="onAgendaCashBillPaid()"
+        >
+          <mat-icon>attach_money</mat-icon>
+        </button>
+        <button
+          *ngIf="authService.isSuperAdmin && dataItem.entity.isCashBill"
+          class="grid-btn"
+          [ngClass]="{
+            'btn btn-secondary': dataItem.entity.isCashBillPaid,
+            'btn-info': !dataItem.entity.isCashBillPaid
+          }"
+          [disabled]="dataItem.entity.state === 2"
+          mat-raised-button
+          (click)="onPayCashAgenda(dataItem.entity.id)"
+        >
+          <mat-icon>attach_money</mat-icon>
+        </button>
+        <!-- <span class="blinking" *ngIf="!dataItem.entity.invoiceId>0 && CheckoutLimit(dataItem.entity.exportDate) >30">هشدار جهت تسویه بارنامه </span> -->
+      </ng-template>
+    </kendo-grid>
+  </div>
+</div>

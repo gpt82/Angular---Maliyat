@@ -1,0 +1,65 @@
+<p class="card-header bg-primary" style="color: white">
+    {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+    <form [formGroup]="form" style="direction: rtl">
+        <div class="form-row" style="padding-top: 10px">
+            <div class="form-group col-md-6 required">
+                <label for="branchId">{{ 'BranchTitle' | translate }}</label>
+                <ng-select style="font-size: small" id="branchId" [items]="branchs" bindLabel="title" bindValue="id" [selectOnTab]="true" appendTo="body" formControlName="branchId">
+                </ng-select>
+            </div>
+            <div class="form-group col-md-6 required">
+                <label class="control-label" for="name">{{ 'Name' | translate }}</label>
+                <input class="form-control" id="name" formControlName="name" />
+            </div>
+
+            <div class="form-group col-md-6">
+                <label for="family" required>{{ 'LastName' | translate }}</label>
+                <input class="form-control" formControlName="family" />
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="name">{{ 'NationalCode' | translate }}</label>
+                <input class="form-control" id="nationalCode" formControlName="nationalCode" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="name">{{ 'mobile' | translate }}</label>
+                <input class="form-control" id="mobile" formControlName="mobile" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-6">
+                <label for="zipCode">{{ 'ZipCode' | translate }}</label>
+                <input class="form-control" id="zipCode" formControlName="zipCode" />
+            </div>
+            <div class="form-group col-md-6">
+                <label for="tel">{{ 'tel' | translate }}</label>
+                <input class="form-control" id="tel" formControlName="mobile" />
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12">
+                <label for="address">{{ 'Address' | translate }}</label>
+                <input class="form-control" id="address" formControlName="address" />
+            </div>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+    <div class="row">
+        <div class="col-xs-12">
+            <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{ 'Close' | translate }}
+      </button>
+            <button mat-raised-button (click)="onSave()" *ngIf="!authService.isReadOnlyUser" mat-button color="primary">
+        {{ 'Save' | translate }}
+      </button>
+            <button mat-raised-button (click)="onEd()" mat-button color="primary">
+        ویرایش
+      </button>
+        </div>
+    </div>
+</mat-dialog-actions>

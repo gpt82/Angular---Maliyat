@@ -1,0 +1,15 @@
+<h2 class="info-title" mat-dialog-title><i class="fa fa-2x fa-trash" style="color:red;"></i> <span> هشدار </span></h2>
+<div class="horizontal-line"></div>
+<div mat-dialog-content style="min-width:250px;">
+  <div class="container">
+    <label class="error-text">{{data.messageText}}</label>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button btn-danger color="warn" (click)="onClick('confirmed')"> بله </button>
+      <button mat-raised-button color="danger" mat-button color="primary" (click)="onClick('canceled')">خیر</button>
+    </div>
+  </div>
+</div>

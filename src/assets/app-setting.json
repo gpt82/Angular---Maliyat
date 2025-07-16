@@ -1,0 +1,37 @@
+{
+    "remoteServiceBaseUrl": "http://localhost:5002",
+    "appBaseUrl": "http://localhost:6200",
+    "issuer": {
+        "authority_configurator": "http://localhost:5001/",
+        "authority": "http://localhost:5000/",
+        "client_id": "spa",
+        "redirect_uri": "http://localhost:6200/auth-callback/",
+        "post_logout_redirect_uri": "http://localhost:6200/",
+        "response_type": "token id_token",
+        "scope": "openid profile roles api",
+        "filterProtocolClaims": true,
+        "loadUserInfo": true,
+        "automaticSilentRenew": true,
+        "monitorSession": false,
+        "signingKeys": [{
+            "kty": "RSA",
+            "use": "sig",
+            "kid": "25e8546f10b1f4de03da05f50b17988d",
+            "e": "AQAB",
+            "n": "qPOyzJhSnuhTengW0AVaHmj0-kwdIEoabX4xEscwpqND3kvSVegEFLLoV4ek7SAF3rThRD__q_UAEf9pd1ZkBxR7Ilt8-_d1SaKXdsX3w0YcDpydnruxThULL_JzpE-zO7Gd6nvwHd3bvVcKTvFH_79L7HvL5w13_PtT0F6LkV5Xb7L0LZ6bZ1dwYHnhra5X12_ihZvOrHA4g2Zl-91oCxo3QzTyJWZsJk1udxTJiUBCe1HwBeWWfALzI6JsOI_zbhdAaJ_x18XX67FgqkdS-P9cE7zsMMD6b322rUEgpT6TRo2R4rYgQi7XT8PLzyAT2B2zamVo6FwK-8ie4sIQ8Q",
+            "alg": "RS256"
+        }],
+        "silent_redirect_uri": "http://localhost:6200/renew-token-callback",
+        "metadata": {
+            "issuer": "http://localhost:5000",
+            "jwks_uri": "http://localhost:5000/.well-known/openid-configuration/jwks",
+            "authorization_endpoint": "http://localhost:5000/connect/authorize",
+            "token_endpoint": "http://localhost:5000/connect/token",
+            "userinfo_endpoint": "http://localhost:5000/connect/userinfo",
+            "end_session_endpoint": "http://localhost:5000/connect/endsession",
+            "check_session_iframe": "http://localhost:5000/connect/checksession",
+            "revocation_endpoint": "http://localhost:5000/connect/revocation",
+            "introspection_endpoint": "http://localhost:5000/connect/introspect"
+        }
+    }
+}

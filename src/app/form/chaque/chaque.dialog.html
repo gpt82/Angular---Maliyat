@@ -1,0 +1,176 @@
+<p class="card-header bg-primary" style="color: white">
+    {{ data.dialogTitle }}
+</p>
+<mat-dialog-content>
+    <form [formGroup]="form" style="direction: rtl">
+        <div class="form-row">
+            <div class="form-group col-md-4 required">
+                <label class="control-label" for="chaqueNumber">{{ 'ChaqueNumber' | translate }}</label
+        >
+        <input
+          class="form-control"
+          id="chaqueNumber"
+          formControlName="chaqueNumber"
+        />
+        <div
+          class="text-danger"
+          *ngIf="chaqueNumber.invalid && (chaqueNumber.dirty || chaqueNumber.touched)"
+        >
+          <small *ngIf="!!chaqueNumber.errors?.required"
+            >{{ 'Code_Is_Required' | translate }}</small
+          >
+          <!-- <small *ngIf="!!code.errors?.minlength || !!code.errors?.maxlength">شماره چک باید بین 3 تا 8 رقم
+            باشد</small> -->
+          <small *ngIf="!!chaqueNumber.errors?.uniqueChaqueCode"
+            >{{ 'Duplicate_Code' | translate }}</small
+          >
+        </div>
+      </div>
+      <div class="form-group col-md-4 required">
+        <label class="control-label" for="bankId"
+          >{{'BankName' | translate }}</label
+        >
+        <ng-select
+          style="font-size: small"
+          id="bankId"
+          [items]="banks"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          formControlName="bankId"
+        >
+        </ng-select>
+      </div>
+
+      <div class="form-group col-md-4">
+        <label class="control-label" for="invoiceNumber"
+          >{{ 'InvoiceNumber' | translate }}</label
+        >
+        <input
+          class="form-control"
+          id="invoiceNumber"
+          formControlName="invoiceNumber"
+        />
+        <div
+          class="text-danger"
+          *ngIf="invoiceNumber.invalid && (invoiceNumber.dirty || invoiceNumber.touched)"
+        >
+          <small *ngIf="!!invoiceNumber.errors?.required"
+            >{{ 'Code_Is_Required' | translate }}</small
+          >
+
+          <small *ngIf="!!invoiceNumber.errors?.ExistInvoiceNumber">
+            این شماره صورتحساب وجود ندارد</small
+          >
+        </div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="driverId"
+          >{{ 'Driver' | translate }}</label
+        >
+        <ng-select
+          class="col-md-12 no-padding"
+          id="driverId"
+          [items]="drivers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="driversLoading"
+          [typeahead]="driversInput$"
+          formControlName="driverId"
+        >
+        </ng-select>
+      </div>
+
+      <div class="form-group col-md-6 required">
+        <label class="control-label" for="trailerId"
+          >{{ 'Trailer' | translate }}</label
+        >
+        <ng-select
+          class="col-md-12 no-padding"
+          id="trailerId"
+          [items]="trailers$ | async"
+          bindLabel="title"
+          bindValue="id"
+          [selectOnTab]="true"
+          appendTo="body"
+          [loading]="trailersLoading"
+          [typeahead]="trailersInput$"
+          formControlName="trailerId"
+        >
+          <!-- <ng-template ng-option-tmp let-item="item">
+            {{ item.title | slice: 0:3 }} {{ item.title | slice: 3:4 }} {{
+            item.title | slice: 4:6 }} ایران {{ item.title | slice: 11:13 }}
+          </ng-template> -->
+        </ng-select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-4 required">
+        <label class="control-label">{{ 'IssueDate' | translate }}</label>
+                <mat-datepicker #picker></mat-datepicker>
+                <input class="form-control" [matDatepicker]="picker" (click)="popUpCalendar()" formControlName="issueDate" />
+            </div>
+            <div class="form-group col-md-4">
+                <label class="control-label"> {{ 'DueDate' | translate }}</label>
+                <mat-datepicker #picker1></mat-datepicker>
+                <input class="form-control" [matDatepicker]="picker1" (click)="popUpCalendar1()" formControlName="dueDate" />
+            </div>
+
+            <div class="form-group col-md-4 required">
+                <label class="control-label" for="amount">
+          {{('Amount' | translate) + (form.get('amount').value |
+          ChakavakCurrency: 'ریال':'p')}}
+        </label>
+                <input class="form-control" id="amount" formControlName="amount"  autocomplete="off" />
+                <div class="text-danger">
+                  <small style="font-size: 12px;">
+                    {{(+form.get('amount').value / 10 | numberToPersian) +
+                    ' تومان ' }}
+                  </small>
+                </div>
+            </div>
+        </div>
+        <div class="form-row">
+            <div class="form-group col-md-12 required">
+                <label class="control-label" for="description">{{ 'Description' | translate }}</label
+        >
+        <input
+          class="form-control"
+          id="description"
+          formControlName="description"
+        />
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button
+        mat-raised-button
+        color="warn"
+        (click)="onClose()"
+        md-dialog-close
+      >
+        {{ 'Close' | translate }}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <button
+        mat-raised-button
+        [disabled]="!form.valid && form.dirty"
+        (click)="onSave()"
+        *ngIf="!(authService.isReadOnlyUser)"
+        mat-button
+        color="primary"
+      >
+        {{ 'Save' | translate }}
+      </button>
+    </div>
+  </div>
+</mat-dialog-actions>

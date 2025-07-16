@@ -1,0 +1,179 @@
+<h2 mat-dialog-title>{{data.dialogTitle}}</h2>
+<div class="horizontal-line"></div>
+<mat-dialog-content>
+  <form [formGroup]="form" style="direction: rtl;">
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="name">{{'Name' | translate}}</label>
+        <input class="form-control" id="name" disabled formControlName="name" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="manufacturerName">
+          {{'CarManufacturer' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="manufacturerName"
+          disabled
+          formControlName="manufacturerName"
+        />
+      </div>
+    </div>
+
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="provinceName">
+          {{'ProvinceTitle' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="provinceName"
+          disabled
+          formControlName="provinceName"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="cityName">
+          {{'CityTitle' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="cityName"
+          disabled
+          formControlName="cityName"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="totalAccount">
+          {{'TotalAccount' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="totalAccount"
+          formControlName="totalAccount"
+        />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="moeenAccount">
+          {{'MoeenAccount' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="moeenAccount"
+          formControlName="moeenAccount"
+        />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="markaz">
+          {{'Markaz' | translate}}
+        </label>
+        <input class="form-control" id="markaz" formControlName="markaz" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="project">
+          {{'Project' | translate}}
+        </label>
+        <input class="form-control" id="project" formControlName="project" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="phone1">
+          {{'Phone1' | translate}}
+        </label>
+        <input class="form-control" id="phone1" formControlName="phone1" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="maxFare">
+          حداکثر مبلغ کرایه در این شعبه
+        </label>
+        <input class="form-control" id="maxFare" formControlName="maxFare" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group col-md-6">
+        <label class="control-label" for="manager">
+          {{'ManagerName' | translate}}
+        </label>
+        <input class="form-control" id="manager" formControlName="manager" />
+      </div>
+      <div class="form-group col-md-6">
+        <label class="control-label" for="fareContract">
+          {{'FareContract' | translate}}
+        </label>
+        <input
+          class="form-control"
+          id="fareContract"
+          formControlName="fareContract"
+        />
+      </div>
+    </div>
+    <div class="row">
+      <div class="form-group">
+        <div class="checkbox rtl checkbox-primary">
+          <input
+            id="checkbox0"
+            type="checkbox"
+            formControlName="maxPreFare40"
+          />
+          <label for="checkbox0">
+            حداکثر پیشکرایه در این شعبه
+            <input
+              id="preFarePercent"
+              type="text"
+              style="width: 30px;"
+              OnlyNumber="true"
+              [maxlength]="2"
+              formControlName="preFarePercent"
+            />
+            درصد کرایه و انعام میباشد.
+          </label>
+          <label for="checkbox0">
+            حداکثر انعام در این شعبه
+            <input
+              id="rewardPercent"
+              type="text"
+              style="width: 30px;"
+              OnlyNumber="true"
+              [maxlength]="2"
+              formControlName="rewardPercent"
+            />
+            درصد کرایه میباشد.
+          </label>
+          <label for="checkbox0" style="font-size: 14px;">
+            حداکثر مجموع کرایه، انعام و میلکران در این شعبه
+            <input
+              id="totalFarePercent"
+              type="text"
+              style="width: 30px;"
+              OnlyNumber="true"
+              [maxlength]="2"
+              formControlName="totalFarePercent"
+            />
+            درصد کرایه دریافتی میباشد.
+          </label>
+        </div>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+    {{'Close' | translate}}
+  </button>
+  <!-- Can optionally provide a result for the closing dialog. -->
+  <button
+    mat-raised-button
+    [disabled]="!form.valid"
+    (click)="onSave()"
+    *ngIf="! authService.isReadOnlyUser"
+    mat-button
+    color="primary"
+  >
+    {{'Save' | translate}}
+  </button>
+</mat-dialog-actions>

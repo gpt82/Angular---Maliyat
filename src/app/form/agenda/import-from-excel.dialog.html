@@ -1,0 +1,47 @@
+<p class="card-header bg-primary" style="color: white">{{data.dialogTitle}}</p>
+<mat-dialog-content>
+  <form style="direction: rtl">
+    <div style="padding-top: 15px;">
+      <label for="fileInput">انتخاب فایل:</label>
+      <input type="file" id="fileInput" (change)="onFileChange($event)" />
+      <!-- <input type="file" (change)="onFileChange($event)" /> -->
+      <button mat-raised-button (click)="uploadFile()" mat-button color="primary">
+        ارسال اطلاعات
+      </button>
+    </div>
+    <hr>
+    <div class="form-row">
+       <label>بارنامه‌هایی که ذخیره شدند{{succeededArray.length}}</label>
+      <div class="form-group col-md-12">
+       
+        <textarea rows="4" cols="50" style="color: rgb(42, 153, 48); width: 100%;">
+      {{ succeededArray }}
+      </textarea>
+      </div>
+
+    </div>
+
+    <hr>
+    <div class="form-row">
+      <label>بارنامه‌هایی که ذخیره نشدند{{failedArray.length}}</label>
+      <div class="form-group col-md-12">
+        
+        <textarea rows="4" cols="50" style="color: rgb(172, 33, 33); width: 100%;">{{ failedArray }}</textarea>
+      </div>
+
+    </div>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <div class="row">
+    <div class="col-xs-12">
+      <button mat-raised-button color="warn" (click)="onClose()" md-dialog-close>
+        {{'Close' | translate}}
+      </button>
+      <!-- Can optionally provide a result for the closing dialog. -->
+      <!-- <button mat-raised-button (click)="onSave()" mat-button color="primary">
+        {{'Save' | translate}}
+      </button> -->
+    </div>
+  </div>
+</mat-dialog-actions>
