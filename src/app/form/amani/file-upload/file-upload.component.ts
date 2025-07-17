@@ -76,7 +76,7 @@ export class FileUploadInputComponent implements OnInit {
     ngOnInit() {
         // if (!this.img)
         //     this.img = '/assets/images/avatar/images.png';
-     this.url ='http://localhost:5002/v1/api/Uploader';
+     this.url ='http://localhost:6002/v1/api/Uploader';
         // if (this.type == 'save')
         //     this.url = environment.ServerApis.uploadSaveUrl;
 

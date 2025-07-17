@@ -24,7 +24,7 @@ export class RolesConstants {
 }
 export class AppConsts {
   private static initialized = false;
-  static remoteServiceBaseUrl: 'http://localhost:5002'; // in remote
+  static remoteServiceBaseUrl: 'http://localhost:6002'; // in remote
   static appBaseUrl: 'http://localhost:4001';
   static oidc_issuer: oidc_issuer;
   static Initialize(httpClient: HttpClient): Promise<void> {

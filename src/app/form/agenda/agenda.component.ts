@@ -33,6 +33,7 @@ import { AgendaMove2AccGroupDialog } from './agenda-move2acc-group.dialog';
 import { ImportFromExcelDialog } from './import-from-excel.dialog';
 import { ChangeAgendaBranch } from './change-agenda-branch.dialog';
 import { SelectionEvent } from '@progress/kendo-angular-grid';
+import { AgendaChangeFare } from './agenda-change-fare.dialog';
 const Normalize = data =>
     data.filter((x, idx, xs) => xs.findIndex(y => y.title === x.title) === idx);
 
@@ -82,15 +83,12 @@ export class AgendaComponent extends GridBaseClass implements OnInit, OnDestroy 
                 // ...(this.authService.isSuperAdmin ? [{ text: 'تغییر شعبه', code: 'changeBranch' }] : []),
                 ...(this.authService.isSuperAdmin || ['بهمن نیا', 'ذوالنوری'].some(substring => this.authService.getFullName().includes(substring)) ? [{ text: 'تغییر شعبه', code: 'changeBranch' }] : []),
                 { text: 'صورتحساب', code: 'Invoice' },
+                { text: 'تغییر کرایه', code: 'ChangeFare' },
                 { text: 'تسویه حساب تریلر', code: 'CheckoutTrailer' },
                 ...(['عظیمی', 'صادقی', 'فیروزه', 'ندرتی', 'میثم', 'رسولی', 'ذوالنوری'].some(substring => this.authService.getFullName().includes(substring)) ?
                     [{ text: 'ورود گروهی از اکسل', code: 'ImportFromExcel' }, { text: 'رسید گروهی ', code: 'GroupPaid' }, { text: 'تاییدگروهی پرداخت پیشکرایه ', code: 'GroupPrefarePaid' }
                         , { text: 'انتقال گروهی به حسابداری', code: 'GroupMove2Acc' }//] : []),
                     ] : []),
-
-
-
-
             ]//this.authService.getFullName().includes(['میثم', 'ندرتی', 'رسولی', 'نادری', 'فرشادی'])
         },
         {
@@ -811,6 +809,48 @@ export class AgendaComponent extends GridBaseClass implements OnInit, OnDestroy 
             }
         });
     }
+    /////////
+  onChangeFare(): void {
+        // const agenda = data; // this.selectedRowIds[0].entity;
+
+        const currentDate = moment();
+        const dialogRef = this.dialog.open(AgendaChangeFare, {
+            width: '480px',
+            height: '400px',
+            disableClose: true,
+            data: {
+                datePickerConfig: {
+                    drops: 'down',
+                    format: 'YY/M/D',
+                    showGoToCurrent: 'true'
+                },
+                dialogTitle: 'تغییر کرایه ها'
+            }
+        });
+        dialogRef.afterClosed().subscribe(result => {
+            if (result && result.state === 'successful') {
+                const headers1 = new HttpHeaders({ 'Content-Type': 'application/json' });
+                this.http
+                    .post(
+                        this.getUrl() + 'ChangeFare/',
+                        JSON.stringify({
+                            fromDate: moment(result.fromDate).locale('fa'),
+                            toDate: moment(result.toDate).locale('fa'),
+                            branchIds: result.branchIds,
+                            tonnageTypeIds: result.tonnageTypeIds,
+                            farePercent: result.farePercent,
+                            milkrunPercent: result.milkrunPercent,
+                            rewardPercent: result.rewardPercent
+                        }),
+                        { headers: headers1 }
+                    ).subscribe(() => {
+                        this.fillGrid();
+                        this.resetSelectedRowIds();
+                    });
+            }
+        });
+    }
+    ///////
     onMove2AccGroup(): void {
         const dialogRef = this.dialog.open(AgendaMove2AccGroupDialog, {
             width: '300px',
@@ -2541,6 +2581,10 @@ export class AgendaComponent extends GridBaseClass implements OnInit, OnDestroy 
             // }
             case 'Invoice': {
                 this.onInvoicePrintPreview();
+                break;
+            }
+            case 'ChangeFare': {
+                this.onChangeFare();
                 break;
             }
             case 'ListAgendaCars': {

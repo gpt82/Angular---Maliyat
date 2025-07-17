@@ -274,6 +274,7 @@ import { ImportFromExcelDialog } from './agenda/import-from-excel.dialog';
 import { DailyOperationDialog } from './daily-operation/daily-operation.dialog';
 import { DailyOperationComponent } from './daily-operation/daily-operation.component';
 import { ChangeAgendaBranch } from './agenda/change-agenda-branch.dialog';
+import { AgendaChangeFare } from './agenda/agenda-change-fare.dialog';
 export function createTranslateLoader(http: HttpClient) {
   return new TranslateHttpLoader(http, './assets/i18n/', '.json');
 }
@@ -504,6 +505,7 @@ export function createTranslateLoader(http: HttpClient) {
     AgendaSetReceipt,
     AgendaMoved2AccDialog,
     AgendaSetReceiptGroup,
+    AgendaChangeFare,
     AgendaMove2AccGroupDialog,
     SetReceiptFoeEternalAgenda,
     ChangeAgendaBranch,
@@ -707,6 +709,7 @@ export function createTranslateLoader(http: HttpClient) {
     AgendaSetReceipt,
     AgendaMoved2AccDialog,
     AgendaSetReceiptGroup,
+    AgendaChangeFare,
     AgendaMove2AccGroupDialog,
     SetReceiptFoeEternalAgenda,
     ChangeAgendaBranch,

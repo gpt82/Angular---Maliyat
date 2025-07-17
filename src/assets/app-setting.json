@@ -1,5 +1,5 @@
 {
-    "remoteServiceBaseUrl": "http://localhost:5002",
+    "remoteServiceBaseUrl": "http://localhost:6002",
     "appBaseUrl": "http://localhost:6200",
     "issuer": {
         "authority_configurator": "http://localhost:5001/",
